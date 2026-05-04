@@ -1,0 +1,109 @@
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { saveSession } from "../store";
+import type { ExerciseMode, Platform } from "../types";
+
+interface LocationState {
+  minutes: number;
+  mode: ExerciseMode;
+  platform: Platform;
+  sessionDate: string;
+}
+
+const LABELS: Record<number, string> = {
+  1: "Very mild",
+  2: "Mild",
+  3: "Moderate",
+  4: "Noticeable",
+  5: "High",
+  6: "Very high",
+  7: "Extreme",
+};
+
+function AnxietyPicker({ value, onChange }: { value: number | null; onChange: (v: number) => void }) {
+  return (
+    <div className="flex gap-2 justify-center flex-wrap">
+      {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+        <button
+          key={n}
+          onClick={() => onChange(n)}
+          className={`w-11 h-11 rounded-full font-bold text-sm transition border-2 ${
+            value === n
+              ? "bg-purple-600 border-purple-400 text-white scale-110"
+              : "bg-[#1e1e1e] border-[#333] text-gray-400 hover:border-purple-500 hover:text-white"
+          }`}
+        >
+          {n}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export default function PostExercise() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { minutes, mode, platform, sessionDate } = (location.state as LocationState) ?? {
+    minutes: 5,
+    mode: "standard",
+    platform: "reddit",
+    sessionDate: new Date().toISOString(),
+  };
+
+  const [peak, setPeak] = useState<number | null>(null);
+  const [current, setCurrent] = useState<number | null>(null);
+
+  function submit() {
+    if (peak === null || current === null) return;
+    saveSession({
+      id: crypto.randomUUID(),
+      date: sessionDate,
+      durationMinutes: minutes,
+      mode,
+      platform,
+      peakAnxiety: peak,
+      currentAnxiety: current,
+    });
+    navigate("/");
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="text-center">
+          <div className="text-4xl mb-3">✓</div>
+          <h1 className="text-2xl font-bold">Session complete</h1>
+          <p className="text-gray-400 text-sm mt-1">{minutes} min · {mode} · {platform}</p>
+        </div>
+
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 space-y-6">
+          <div>
+            <h2 className="text-sm font-semibold text-center mb-1">Peak anxiety during the session</h2>
+            {peak !== null && (
+              <p className="text-xs text-center text-gray-500 mb-3">{LABELS[peak]}</p>
+            )}
+            {peak === null && <div className="mb-3" />}
+            <AnxietyPicker value={peak} onChange={setPeak} />
+          </div>
+
+          <div className="border-t border-[#2a2a2a] pt-4">
+            <h2 className="text-sm font-semibold text-center mb-1">Where are you right now?</h2>
+            {current !== null && (
+              <p className="text-xs text-center text-gray-500 mb-3">{LABELS[current]}</p>
+            )}
+            {current === null && <div className="mb-3" />}
+            <AnxietyPicker value={current} onChange={setCurrent} />
+          </div>
+        </div>
+
+        <button
+          onClick={submit}
+          disabled={peak === null || current === null}
+          className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition"
+        >
+          Save & finish
+        </button>
+      </div>
+    </div>
+  );
+}

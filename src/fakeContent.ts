@@ -63,14 +63,27 @@ export interface FakePost {
   platform: Platform;
   username: string;
   body: string;
+  timeAgo: string;
   subreddit?: string;
   upvotes?: number;
   retweets?: number;
   likes?: number;
   channel?: string;
   server?: string;
-  replies: { username: string; body: string }[];
+  replies: { username: string; body: string; timeAgo: string }[];
   triggerPlacement: Placement;
+}
+
+function randomTimeAgo(maxHours: number): string {
+  const h = Math.floor(Math.random() * maxHours) + 1;
+  return `${h}h ago`;
+}
+
+function randomDiscordTime(): string {
+  const h = (Math.floor(Math.random() * 12) + 1).toString().padStart(2, "0");
+  const m = Math.floor(Math.random() * 60).toString().padStart(2, "0");
+  const ampm = Math.random() > 0.5 ? "AM" : "PM";
+  return `Today at ${h}:${m} ${ampm}`;
 }
 
 export function generateFakePost(platform: Platform, triggerWord: string, placement: Placement): FakePost {
@@ -88,6 +101,7 @@ export function generateFakePost(platform: Platform, triggerWord: string, placem
     return {
       username: randomUsername(isTarget ? triggerWord : undefined, isTarget),
       body: isTarget ? injectWord(rand(REPLY_BODIES), triggerWord) : rand(REPLY_BODIES),
+      timeAgo: platform === "discord" ? randomDiscordTime() : randomTimeAgo(10),
     };
   });
 
@@ -95,6 +109,7 @@ export function generateFakePost(platform: Platform, triggerWord: string, placem
     platform,
     username: mainUsername,
     body,
+    timeAgo: platform === "discord" ? randomDiscordTime() : randomTimeAgo(20),
     subreddit: platform === "reddit" ? rand(SUBREDDITS) : undefined,
     upvotes: platform === "reddit" ? Math.floor(Math.random() * 50000) + 100 : undefined,
     retweets: platform === "twitter" ? Math.floor(Math.random() * 5000) : undefined,

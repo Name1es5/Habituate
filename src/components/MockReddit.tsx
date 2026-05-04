@@ -49,7 +49,7 @@ export default function MockReddit({ post }: { post: FakePost }) {
                 </div>
                 <div>
                   <span className="text-xs font-bold text-[#ff4500] mr-2">u/{r.username}</span>
-                  <span className="text-xs text-[#818384]">• {Math.floor(Math.random() * 12) + 1}h ago</span>
+                  <span className="text-xs text-[#818384]">• {r.timeAgo}</span>
                   <p className="text-sm text-[#d7dadc] mt-0.5">{r.body}</p>
                 </div>
               </div>

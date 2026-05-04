@@ -27,7 +27,7 @@ export default function MockTwitter({ post }: { post: FakePost }) {
               <span className="font-bold text-white text-sm">{post.username}</span>
               <span className="text-[#71767b] text-sm">@{post.username.toLowerCase().replace(/\s/g, "_")}</span>
               <span className="text-[#71767b] text-sm">·</span>
-              <span className="text-[#71767b] text-sm">{Math.floor(Math.random() * 20) + 1}h</span>
+              <span className="text-[#71767b] text-sm">{post.timeAgo}</span>
             </div>
             <p className="text-white text-sm mt-1 leading-relaxed">{post.body}</p>
 
@@ -63,7 +63,7 @@ export default function MockTwitter({ post }: { post: FakePost }) {
             <div className="flex items-center gap-1">
               <span className="font-bold text-white text-xs">{r.username}</span>
               <span className="text-[#71767b] text-xs">@{r.username.toLowerCase()}</span>
-              <span className="text-[#71767b] text-xs">· {Math.floor(Math.random() * 10) + 1}h</span>
+              <span className="text-[#71767b] text-xs">· {r.timeAgo}</span>
             </div>
             <p className="text-white text-sm mt-0.5">{r.body}</p>
           </div>

@@ -10,7 +10,7 @@ const SIDEBAR_CHANNELS = ["#general","#off-topic","#random","#memes","#introduct
 
 export default function MockDiscord({ post }: { post: FakePost }) {
   const allMessages = [
-    { username: post.username, body: post.body, isMain: true },
+    { username: post.username, body: post.body, timeAgo: post.timeAgo, isMain: true },
     ...post.replies.map((r) => ({ ...r, isMain: false })),
   ];
 
@@ -57,7 +57,7 @@ export default function MockDiscord({ post }: { post: FakePost }) {
         {/* messages */}
         <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
           {allMessages.map((msg, i) => {
-            const time = `Today at ${(Math.floor(Math.random() * 12) + 1).toString().padStart(2, "0")}:${Math.floor(Math.random() * 60).toString().padStart(2, "0")} ${Math.random() > 0.5 ? "AM" : "PM"}`;
+            const time = msg.timeAgo;
             return (
               <div key={i} className="flex gap-3">
                 <div

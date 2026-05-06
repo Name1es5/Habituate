@@ -1,0 +1,7 @@
+services:
+  erp-app:
+    build: .
+    container_name: erp-app
+    ports:
+      - "8081:80"
+    restart: unless-stopped

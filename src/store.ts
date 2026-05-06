@@ -2,10 +2,21 @@ import type { AppSettings, Session } from "./types";
 
 const SETTINGS_KEY = "erp_settings";
 const SESSIONS_KEY = "erp_sessions";
+const NOTIF_KEY = "erp_notif";
 
 const defaultSettings: AppSettings = {
   triggerWords: [],
   hobbySearchTerms: [],
+};
+
+export interface NotifSettings {
+  enabled: boolean;
+  time: string; // "HH:MM" 24h
+}
+
+const defaultNotifSettings: NotifSettings = {
+  enabled: false,
+  time: "19:00",
 };
 
 export function getSettings(): AppSettings {
@@ -21,6 +32,19 @@ export function saveSettings(s: AppSettings) {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 }
 
+export function getNotifSettings(): NotifSettings {
+  try {
+    const raw = localStorage.getItem(NOTIF_KEY);
+    return raw ? { ...defaultNotifSettings, ...JSON.parse(raw) } : defaultNotifSettings;
+  } catch {
+    return defaultNotifSettings;
+  }
+}
+
+export function saveNotifSettings(s: NotifSettings) {
+  localStorage.setItem(NOTIF_KEY, JSON.stringify(s));
+}
+
 export function getSessions(): Session[] {
   try {
     const raw = localStorage.getItem(SESSIONS_KEY);
@@ -34,6 +58,11 @@ export function saveSession(session: Session) {
   const sessions = getSessions();
   sessions.unshift(session);
   localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+}
+
+export function hasSessionToday(): boolean {
+  const today = new Date().toISOString().slice(0, 10);
+  return getSessions().some((s) => s.date.slice(0, 10) === today);
 }
 
 export function getStreak(): number {

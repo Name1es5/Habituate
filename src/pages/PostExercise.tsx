@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveSession } from "../store";
+import { saveSession, getStreak, hasSessionToday } from "../store";
 import type { ExerciseMode, Platform } from "../types";
 
 interface LocationState {
@@ -40,6 +40,18 @@ function AnxietyPicker({ value, onChange }: { value: number | null; onChange: (v
   );
 }
 
+function StreakCelebration({ streak }: { streak: number }) {
+  return (
+    <div className="bg-[#1a1a0a] border border-orange-700 rounded-xl px-4 py-3 flex items-center gap-3 mb-4">
+      <span className="text-3xl">🔥</span>
+      <div>
+        <div className="text-orange-400 font-bold text-sm">{streak}-day streak!</div>
+        <div className="text-gray-400 text-xs">Keep showing up. It gets easier.</div>
+      </div>
+    </div>
+  );
+}
+
 export default function PostExercise() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,8 +62,13 @@ export default function PostExercise() {
     sessionDate: new Date().toISOString(),
   };
 
+  const hadSessionBeforeThis = hasSessionToday();
+  const streakBefore = getStreak();
+
   const [peak, setPeak] = useState<number | null>(null);
   const [current, setCurrent] = useState<number | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [newStreak, setNewStreak] = useState<number | null>(null);
 
   function submit() {
     if (peak === null || current === null) return;
@@ -64,7 +81,45 @@ export default function PostExercise() {
       peakAnxiety: peak,
       currentAnxiety: current,
     });
-    navigate("/");
+
+    const streak = getStreak();
+    const extended = !hadSessionBeforeThis && streak > streakBefore;
+    if (extended || streak >= 1) setNewStreak(streak);
+    setSaved(true);
+  }
+
+  if (saved) {
+    return (
+      <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-sm space-y-4 text-center">
+          <div className="text-5xl mb-2">✓</div>
+          <h1 className="text-2xl font-bold">Logged</h1>
+          <p className="text-gray-400 text-sm">{minutes} min · {mode} · {platform}</p>
+
+          {newStreak !== null && newStreak > 0 && (
+            <StreakCelebration streak={newStreak} />
+          )}
+
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-gray-400 text-left space-y-1">
+            <div className="flex justify-between">
+              <span>Peak anxiety</span>
+              <span className="text-white font-medium">{peak}/7 — {LABELS[peak!]}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Current anxiety</span>
+              <span className="text-white font-medium">{current}/7 — {LABELS[current!]}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate("/")}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition mt-2"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -79,18 +134,14 @@ export default function PostExercise() {
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 space-y-6">
           <div>
             <h2 className="text-sm font-semibold text-center mb-1">Peak anxiety during the session</h2>
-            {peak !== null && (
-              <p className="text-xs text-center text-gray-500 mb-3">{LABELS[peak]}</p>
-            )}
+            {peak !== null && <p className="text-xs text-center text-gray-500 mb-3">{LABELS[peak]}</p>}
             {peak === null && <div className="mb-3" />}
             <AnxietyPicker value={peak} onChange={setPeak} />
           </div>
 
           <div className="border-t border-[#2a2a2a] pt-4">
             <h2 className="text-sm font-semibold text-center mb-1">Where are you right now?</h2>
-            {current !== null && (
-              <p className="text-xs text-center text-gray-500 mb-3">{LABELS[current]}</p>
-            )}
+            {current !== null && <p className="text-xs text-center text-gray-500 mb-3">{LABELS[current]}</p>}
             {current === null && <div className="mb-3" />}
             <AnxietyPicker value={current} onChange={setCurrent} />
           </div>

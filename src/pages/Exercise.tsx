@@ -90,8 +90,21 @@ export default function Exercise() {
   }, [secondsLeft, mode, halfSeconds, totalSeconds, inHobbyHalf]);
 
   const progressPct = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
+  const elapsedSeconds = totalSeconds - secondsLeft;
+  const MIN_SECONDS = 120;
+  const [showExitNudge, setShowExitNudge] = useState(false);
 
   function handleExit() {
+    if (elapsedSeconds < MIN_SECONDS) {
+      setShowExitNudge(true);
+      return;
+    }
+    navigate("/post-exercise", {
+      state: { minutes, mode, platform, sessionDate: new Date().toISOString() },
+    });
+  }
+
+  function confirmExit() {
     navigate("/post-exercise", {
       state: { minutes, mode, platform, sessionDate: new Date().toISOString() },
     });
@@ -99,6 +112,33 @@ export default function Exercise() {
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col">
+      {/* exit nudge overlay */}
+      {showExitNudge && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-6">
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 max-w-xs w-full text-center space-y-4">
+            <div className="text-3xl">⏱</div>
+            <h2 className="text-lg font-semibold">Stay a little longer?</h2>
+            <p className="text-gray-400 text-sm">
+              You've only gone {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")}. The discomfort usually peaks and fades — give it a bit more time.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowExitNudge(false)}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-xl transition text-sm"
+              >
+                Keep going
+              </button>
+              <button
+                onClick={confirmExit}
+                className="flex-1 bg-[#252525] hover:bg-[#333] text-gray-400 hover:text-white font-medium py-2.5 rounded-xl transition text-sm"
+              >
+                Exit anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* top bar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e1e1e]">
         <div className="flex items-center gap-3">

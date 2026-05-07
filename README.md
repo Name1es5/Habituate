@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# ERP Practice App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-first progressive web app for practising **Exposure and Response Prevention (ERP)** — the evidence-based therapy for OCD and anxiety.
 
-Currently, two official plugins are available:
+ERP works by deliberately exposing yourself to a trigger and sitting with the discomfort without performing a compulsion, until the anxiety naturally subsides. This app simulates that process using realistic-looking mock social media posts that contain your personal trigger words.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## How it works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Add trigger words** in Settings — words or phrases that tend to spike your anxiety.
+2. **Start a session** from the home screen. Choose a duration (1–60 min) and a mode.
+3. During the session, a mock Reddit, Twitter, or Discord post appears containing your trigger word. Stay with it. Don't close the app, don't seek reassurance.
+4. When the session ends, **log your anxiety** — peak level and where you are now. Watching that number drop over time is the evidence that ERP is working.
 
-## Expanding the ESLint configuration
+### Modes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Mode | Description |
+|------|-------------|
+| **Standard** | Full session focused on trigger exposure |
+| **Hybrid** | First half is trigger exposure; second half auto-searches a hobby topic you enjoy |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Install
+
+```bash
+git clone git@github.com:Name1es5/erp-app.git
+cd erp-app
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Running
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Development (live reload, no build step)
+
+```bash
+npm run dev
 ```
+
+Or with Docker (recommended on Raspberry Pi — no local Node required):
+
+```bash
+docker compose --profile dev up dev
+```
+
+Access at `http://localhost:5173`
+
+### Production
+
+Builds a static site served by nginx:
+
+```bash
+docker compose up
+```
+
+Access at `http://localhost:8081`
+
+---
+
+## Deployment on Raspberry Pi
+
+1. Clone the repo onto the Pi (use SSH, not HTTPS):
+   ```bash
+   git clone git@github.com:Name1es5/erp-app.git
+   ```
+2. Run the production compose service:
+   ```bash
+   cd erp-app
+   docker compose up -d
+   ```
+3. The app is available at `http://<pi-ip>:8081` from any device on the same network.
+
+To pull updates:
+```bash
+git pull
+docker compose up -d --build
+```
+
+---
+
+## Tech stack
+
+- **React 19** + TypeScript
+- **Tailwind CSS** v3
+- **Vite** + `vite-plugin-pwa` (installable as a PWA)
+- **React Router** v7
+- All data stored in `localStorage` — no backend, no accounts
+
+---
+
+## Privacy
+
+Everything stays on your device. No data is sent anywhere. Trigger words and session history are stored only in your browser's local storage.

@@ -83,7 +83,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white max-w-lg mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#0d0f1a] text-white max-w-lg mx-auto flex flex-col">
       {/* header */}
       <div className="px-6 pt-6 pb-0">
         <button onClick={() => navigate("/")} className="text-gray-400 hover:text-white text-sm mb-5 flex items-center gap-1">
@@ -99,7 +99,7 @@ export default function Settings() {
               onClick={() => setTab(t.id)}
               className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px ${
                 tab === t.id
-                  ? "border-purple-500 text-white"
+                  ? "border-violet-500 text-white"
                   : "border-transparent text-gray-500 hover:text-gray-300"
               }`}
             >
@@ -119,7 +119,7 @@ export default function Settings() {
 
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-sm outline-none focus:border-purple-500"
+                className="flex-1 bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
                 placeholder="Add a trigger word..."
                 value={wordInput}
                 onChange={(e) => setWordInput(e.target.value)}
@@ -127,7 +127,7 @@ export default function Settings() {
               />
               <button
                 onClick={addWord}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
               >
                 Add
               </button>
@@ -154,7 +154,7 @@ export default function Settings() {
 
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-sm outline-none focus:border-teal-500"
+                className="flex-1 bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-teal-500"
                 placeholder="e.g. mountain biking, watercolor painting..."
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
@@ -203,13 +203,13 @@ export default function Settings() {
                 {!notif.enabled || notifPermission !== "granted" ? (
                   <button
                     onClick={handleEnableNotifications}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium w-full transition"
+                    className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium w-full transition"
                   >
                     Enable daily reminders
                   </button>
                 ) : (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3">
+                    <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
                       <div>
                         <div className="text-sm font-medium text-green-400">Reminders on</div>
                         <div className="text-xs text-gray-500">Notifies at {formatTime12h(notif.time)} if no session yet</div>
@@ -228,7 +228,7 @@ export default function Settings() {
                         type="time"
                         value={notif.time}
                         onChange={(e) => handleTimeChange(e.target.value)}
-                        className="bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-sm outline-none focus:border-purple-500 text-white"
+                        className="bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 text-white"
                       />
                     </div>
                   </div>

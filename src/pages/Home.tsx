@@ -26,7 +26,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col items-center justify-center p-6">
       {/* top bar */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4">
         <button
@@ -51,8 +51,8 @@ export default function Home() {
       </div>
 
       <div className="text-center mb-8 mt-8">
-        <h1 className="text-4xl font-bold mb-2">ERP Exercise</h1>
-        <p className="text-gray-400 text-sm">Exposure and Response Prevention</p>
+        <h1 className="text-4xl font-bold mb-2">ERP Practice</h1>
+        <p className="text-gray-400 text-sm">A safe space to face what's hard</p>
       </div>
 
       {/* daily status card */}
@@ -60,8 +60,8 @@ export default function Home() {
         doneToday
           ? "bg-[#0d2e1a] border-green-800"
           : streakAtRisk
-          ? "bg-[#2e1a0d] border-orange-800"
-          : "bg-[#1a1a1a] border-[#2a2a2a]"
+          ? "bg-[#2a1c0d] border-orange-800"
+          : "bg-[#171a2d] border-[#252a40]"
       }`}>
         <span className="text-2xl">
           {doneToday ? "✅" : streakAtRisk ? "⚠️" : "⭕"}
@@ -94,13 +94,13 @@ export default function Home() {
           <button
             onClick={() => canStart && setShowStart(true)}
             disabled={!canStart}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg transition"
+            className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg transition shadow-lg shadow-violet-900/30"
           >
-            Start Exercise
+            Start Session
           </button>
         </div>
       ) : (
-        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-6 w-full max-w-xs space-y-5">
+        <div className="bg-[#171a2d] border border-[#252a40] rounded-2xl p-6 w-full max-w-xs space-y-5">
           <h2 className="text-lg font-semibold text-center">Set up your session</h2>
 
           {/* duration */}
@@ -109,14 +109,14 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setMinutes((m) => Math.max(1, m - 1))}
-                className="w-9 h-9 rounded-full bg-[#252525] hover:bg-[#333] text-white font-bold text-lg flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-[#1e2238] hover:bg-[#252a40] text-white font-bold text-lg flex items-center justify-center"
               >
                 −
               </button>
               <span className="text-2xl font-bold w-16 text-center">{minutes} min</span>
               <button
                 onClick={() => setMinutes((m) => Math.min(60, m + 1))}
-                className="w-9 h-9 rounded-full bg-[#252525] hover:bg-[#333] text-white font-bold text-lg flex items-center justify-center"
+                className="w-9 h-9 rounded-full bg-[#1e2238] hover:bg-[#252a40] text-white font-bold text-lg flex items-center justify-center"
               >
                 +
               </button>
@@ -131,8 +131,8 @@ export default function Home() {
                 onClick={() => setMode("standard")}
                 className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
                   mode === "standard"
-                    ? "bg-purple-600 border-purple-500 text-white"
-                    : "bg-[#252525] border-[#333] text-gray-400 hover:border-gray-500"
+                    ? "bg-violet-600 border-violet-500 text-white"
+                    : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
                 }`}
               >
                 Standard
@@ -144,7 +144,7 @@ export default function Home() {
                 className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
                   mode === "hybrid"
                     ? "bg-teal-600 border-teal-500 text-white"
-                    : "bg-[#252525] border-[#333] text-gray-400 hover:border-gray-500"
+                    : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
                 } disabled:opacity-40 disabled:cursor-not-allowed`}
               >
                 Hybrid
@@ -157,7 +157,7 @@ export default function Home() {
 
           <button
             onClick={startExercise}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-violet-900/30"
           >
             Begin
           </button>

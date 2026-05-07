@@ -29,8 +29,8 @@ function AnxietyPicker({ value, onChange }: { value: number | null; onChange: (v
           onClick={() => onChange(n)}
           className={`w-11 h-11 rounded-full font-bold text-sm transition border-2 ${
             value === n
-              ? "bg-purple-600 border-purple-400 text-white scale-110"
-              : "bg-[#1e1e1e] border-[#333] text-gray-400 hover:border-purple-500 hover:text-white"
+              ? "bg-violet-600 border-violet-400 text-white scale-110"
+              : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-violet-500 hover:text-white"
           }`}
         >
           {n}
@@ -90,17 +90,17 @@ export default function PostExercise() {
 
   if (saved) {
     return (
-      <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-4 text-center">
           <div className="text-5xl mb-2">✓</div>
-          <h1 className="text-2xl font-bold">Logged</h1>
+          <h1 className="text-2xl font-bold">Well done.</h1>
           <p className="text-gray-400 text-sm">{minutes} min · {mode} · {platform}</p>
 
           {newStreak !== null && newStreak > 0 && (
             <StreakCelebration streak={newStreak} />
           )}
 
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3 text-sm text-gray-400 text-left space-y-1">
+          <div className="bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3 text-sm text-gray-400 text-left space-y-1">
             <div className="flex justify-between">
               <span>Peak anxiety</span>
               <span className="text-white font-medium">{peak}/7 — {LABELS[peak!]}</span>
@@ -113,7 +113,7 @@ export default function PostExercise() {
 
           <button
             onClick={() => navigate("/")}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition mt-2"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-3 rounded-xl transition mt-2"
           >
             Done
           </button>
@@ -123,15 +123,15 @@ export default function PostExercise() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <div className="text-4xl mb-3">✓</div>
-          <h1 className="text-2xl font-bold">Session complete</h1>
+          <h1 className="text-2xl font-bold">You did it.</h1>
           <p className="text-gray-400 text-sm mt-1">{minutes} min · {mode} · {platform}</p>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-2xl p-5 space-y-6">
+        <div className="bg-[#171a2d] border border-[#252a40] rounded-2xl p-5 space-y-6">
           <div>
             <h2 className="text-sm font-semibold text-center mb-1">Peak anxiety during the session</h2>
             {peak !== null && <p className="text-xs text-center text-gray-500 mb-3">{LABELS[peak]}</p>}
@@ -150,7 +150,7 @@ export default function PostExercise() {
         <button
           onClick={submit}
           disabled={peak === null || current === null}
-          className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition"
+          className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition"
         >
           Save & finish
         </button>

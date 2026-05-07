@@ -15,7 +15,7 @@ function AnxietyBar({ value }: { value: number }) {
   const pct = (value / 7) * 100;
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 bg-[#222] rounded-full h-2">
+      <div className="flex-1 bg-[#1e2238] rounded-full h-2">
         <div
           className="h-2 rounded-full bg-gradient-to-r from-green-500 to-red-500"
           style={{ width: `${pct}%` }}
@@ -32,7 +32,7 @@ export default function History() {
   const streak = getStreak();
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white p-6 max-w-lg mx-auto">
+    <div className="min-h-screen bg-[#0d0f1a] text-white p-6 max-w-lg mx-auto">
       <button onClick={() => navigate("/")} className="text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-1">
         ← Back
       </button>
@@ -50,13 +50,13 @@ export default function History() {
       ) : (
         <div className="space-y-4">
           {sessions.map((s) => (
-            <div key={s.id} className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4">
+            <div key={s.id} className="bg-[#171a2d] border border-[#252a40] rounded-xl p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="text-sm font-medium capitalize">{s.mode} · {s.platform}</div>
                   <div className="text-xs text-gray-500 mt-0.5">{new Date(s.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</div>
                 </div>
-                <span className="text-xs bg-[#252525] text-gray-400 px-2 py-1 rounded-full">{s.durationMinutes} min</span>
+                <span className="text-xs bg-[#1e2238] text-gray-400 px-2 py-1 rounded-full">{s.durationMinutes} min</span>
               </div>
 
               <div className="space-y-2">

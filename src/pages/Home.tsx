@@ -54,7 +54,7 @@ export default function Home() {
       </div>
 
       <div className="text-center mb-8 mt-8">
-        <h1 className="text-4xl font-bold mb-2">ERP Practice</h1>
+        <h1 className="text-4xl font-bold mb-2">Habituate</h1>
         <p className="text-gray-400 text-sm">A safe space to face what's hard</p>
       </div>
 

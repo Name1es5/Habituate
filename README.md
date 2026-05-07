@@ -1,4 +1,4 @@
-# ERP Practice App
+# Habituate
 
 A mobile-first progressive web app for practising **Exposure and Response Prevention (ERP)** — the evidence-based therapy for OCD and anxiety.
 

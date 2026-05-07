@@ -133,7 +133,7 @@ export default function Settings() {
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mb-6">
               {settings.triggerWords.length === 0 && (
                 <p className="text-gray-500 text-sm">No trigger words added yet.</p>
               )}
@@ -143,6 +143,36 @@ export default function Settings() {
                   <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
                 </span>
               ))}
+            </div>
+
+            {/* frequency */}
+            <div>
+              <label className="text-sm text-gray-400 block mb-1">Word appearances per post</label>
+              <p className="text-xs text-gray-600 mb-3">Controls how many times your trigger word shows up in each mock post.</p>
+              <div className="flex gap-2">
+                {(["less", "normal", "more"] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => {
+                      const updated = { ...settings, triggerFrequency: f };
+                      setSettings(updated);
+                      saveSettings(updated);
+                    }}
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition border capitalize ${
+                      settings.triggerFrequency === f
+                        ? "bg-violet-600 border-violet-500 text-white"
+                        : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between text-xs text-gray-600 mt-1 px-1">
+                <span>Once, in body only</span>
+                <span>Random placement</span>
+                <span>Body + replies</span>
+              </div>
             </div>
           </section>
         )}

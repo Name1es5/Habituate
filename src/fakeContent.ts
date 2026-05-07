@@ -1,4 +1,4 @@
-import type { Platform, Placement } from "./types";
+import type { Platform, Placement, TriggerFrequency } from "./types";
 
 const ADJECTIVES = ["Quick","Brave","Silent","Lucky","Fuzzy","Odd","Calm","Bold","Neat","Wise","Dark","Bright","Pale","Sharp","Rough"];
 const NOUNS = ["Panda","Eagle","River","Cloud","Stone","Wolf","Cactus","Pixel","Nova","Fox","Cedar","Blaze","Creek","Marsh","Frost"];
@@ -86,18 +86,29 @@ function randomDiscordTime(): string {
   return `Today at ${h}:${m} ${ampm}`;
 }
 
-export function generateFakePost(platform: Platform, triggerWord: string, placement: Placement): FakePost {
-  const inUsername = placement === "username";
-  const inBody = placement === "body";
-  const inReply = placement === "reply";
+export function generateFakePost(platform: Platform, triggerWord: string, placement: Placement, frequency: TriggerFrequency = "normal"): FakePost {
+  // "less"   = word in body only, once
+  // "normal" = word in one random placement (current behaviour)
+  // "more"   = word in body + injected into 1–2 replies as well
+
+  const effectivePlacement: Placement = frequency === "less" ? "body" : placement;
+
+  const inUsername = effectivePlacement === "username";
+  const inBody = effectivePlacement === "body" || frequency === "more";
+  const inReply = effectivePlacement === "reply";
 
   const mainUsername = randomUsername(triggerWord, inUsername);
   const rawBody = rand(POST_BODIES);
   const body = inBody ? injectWord(rawBody, triggerWord) : rawBody;
 
   const replyCount = 2 + Math.floor(Math.random() * 3);
+  // For "more", inject into the first 1–2 replies regardless of placement
+  const moreReplyTargets = frequency === "more"
+    ? new Set([0, ...(replyCount > 2 ? [1] : [])])
+    : new Set<number>();
+
   const replies = Array.from({ length: replyCount }, (_, i) => {
-    const isTarget = inReply && i === Math.floor(Math.random() * replyCount);
+    const isTarget = moreReplyTargets.has(i) || (inReply && i === Math.floor(Math.random() * replyCount));
     return {
       username: randomUsername(isTarget ? triggerWord : undefined, isTarget),
       body: isTarget ? injectWord(rand(REPLY_BODIES), triggerWord) : rand(REPLY_BODIES),

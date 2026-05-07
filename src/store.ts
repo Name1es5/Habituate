@@ -7,6 +7,7 @@ const NOTIF_KEY = "erp_notif";
 const defaultSettings: AppSettings = {
   triggerWords: [],
   hobbySearchTerms: [],
+  triggerFrequency: "normal",
 };
 
 export interface NotifSettings {

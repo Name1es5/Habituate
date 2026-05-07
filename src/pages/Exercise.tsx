@@ -53,7 +53,7 @@ export default function Exercise() {
   // Generate initial post
   useEffect(() => {
     if (triggerWordRef.current) {
-      setPost(generateFakePost(platform, triggerWordRef.current, placementRef.current));
+      setPost(generateFakePost(platform, triggerWordRef.current, placementRef.current, settings.triggerFrequency));
     }
   }, [platform]);
 

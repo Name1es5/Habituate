@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getSettings, getStreak, hasSessionToday } from "../store";
 import { initNotifications } from "../notifications";
 import { getDailyFact } from "../erpFacts";
+import StreakGrid from "../components/StreakGrid";
 import type { ExerciseMode } from "../types";
 
 export default function Home() {
@@ -85,6 +86,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* streak grid */}
+      {!showStart && <StreakGrid streak={streak} />}
 
       {/* daily fact */}
       {!showStart && (

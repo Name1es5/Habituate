@@ -19,6 +19,23 @@ ERP works by deliberately exposing yourself to a trigger and sitting with the di
 |------|-------------|
 | **Standard** | Full session focused on trigger exposure |
 | **Hybrid** | First half is trigger exposure; second half auto-searches a hobby topic you enjoy |
+| **Split** | Trigger mock and hobby search side by side for the entire session — the trigger is always visible |
+
+### Trigger word frequency
+
+Controlled in Settings → Trigger Words:
+
+| Setting | Appearances per post |
+|---------|----------------------|
+| **Less** | Once, in the post body only |
+| **Normal** | 2–3 times across body and replies |
+| **More** | 4–5 times across body, username, and replies |
+
+### Home screen
+
+- **10-week streak grid** — a square for every day, filled when you completed a session
+- **Anxiety reduction stat** — updates dynamically based on your streak, showing the approximate improvement associated with consistent ERP practice
+- **Daily fact** — a rotating evidence-based fact about avoidance and OCD, shown before every session
 
 ---
 
@@ -47,6 +64,8 @@ npm install
 npm run dev
 ```
 
+On Windows, double-click `launch-dev.bat` in the repo folder — it installs dependencies and starts the server automatically.
+
 Or with Docker (recommended on Raspberry Pi — no local Node required):
 
 ```bash
@@ -73,12 +92,16 @@ Access at `http://localhost:8081`
    ```bash
    git clone git@github.com:Name1es5/erp-app.git
    ```
-2. Run the production compose service:
+2. Make sure your user owns the target directory before cloning:
+   ```bash
+   sudo chown -R $USER:$USER /mnt/configs
+   ```
+3. Run the production compose service:
    ```bash
    cd erp-app
    docker compose up -d
    ```
-3. The app is available at `http://<pi-ip>:8081` from any device on the same network.
+4. The app is available at `http://<pi-ip>:8081` from any device on the same network.
 
 To pull updates:
 ```bash

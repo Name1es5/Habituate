@@ -7,6 +7,7 @@ import { generateFakePost } from "../fakeContent";
 import MockReddit from "../components/MockReddit";
 import MockTwitter from "../components/MockTwitter";
 import MockDiscord from "../components/MockDiscord";
+import PugBuddy from "../components/PugBuddy";
 
 const PLATFORMS: Platform[] = ["reddit", "twitter", "discord"];
 const PLACEMENTS: Placement[] = ["username", "body", "reply"];
@@ -198,6 +199,8 @@ export default function Exercise() {
           </div>
         )}
       </div>
+
+      <PugBuddy />
     </div>
   );
 }

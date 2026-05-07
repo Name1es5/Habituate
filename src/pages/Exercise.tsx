@@ -150,6 +150,9 @@ export default function Exercise() {
               {inHobbyHalf ? "hobby half" : "exposure half"}
             </span>
           )}
+          {mode === "split" && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-violet-900 text-violet-300">split</span>
+          )}
         </div>
         <button
           onClick={handleExit}
@@ -168,23 +171,12 @@ export default function Exercise() {
       </div>
 
       {/* content */}
-      <div className="flex-1 p-4 overflow-auto">
-        {inHobbyHalf && mode === "hybrid" ? (
-          <div className="w-full h-full flex flex-col gap-2">
-            <p className="text-xs text-gray-500 text-center">Searching: <span className="text-teal-400">{searchTerm}</span></p>
-            <iframe
-              key={searchTerm}
-              src={`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}&igu=1`}
-              className="w-full flex-1 rounded-xl border border-[#252a40]"
-              style={{ minHeight: "calc(100vh - 140px)" }}
-              title="hobby search"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            />
-          </div>
-        ) : (
-          <div className="max-w-2xl mx-auto">
+      {mode === "split" ? (
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          {/* trigger half */}
+          <div className="flex-1 overflow-auto border-b lg:border-b-0 lg:border-r border-[#1e2238]">
             {!showTrigger && (
-              <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+              <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-8">
                 <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
                 <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
               </div>
@@ -197,8 +189,54 @@ export default function Exercise() {
               </>
             )}
           </div>
-        )}
-      </div>
+
+          {/* hobby half */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <p className="text-xs text-gray-500 text-center py-1.5 border-b border-[#1e2238] flex-shrink-0">
+              <span className="text-teal-400">{searchTerm}</span>
+            </p>
+            <iframe
+              key={searchTerm}
+              src={`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}&igu=1`}
+              className="flex-1 w-full"
+              title="hobby search"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex-1 p-4 overflow-auto">
+          {inHobbyHalf && mode === "hybrid" ? (
+            <div className="w-full h-full flex flex-col gap-2">
+              <p className="text-xs text-gray-500 text-center">Searching: <span className="text-teal-400">{searchTerm}</span></p>
+              <iframe
+                key={searchTerm}
+                src={`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}&igu=1`}
+                className="w-full flex-1 rounded-xl border border-[#252a40]"
+                style={{ minHeight: "calc(100vh - 140px)" }}
+                title="hobby search"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
+          ) : (
+            <div className="max-w-2xl mx-auto">
+              {!showTrigger && (
+                <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+                  <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+                  <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+                </div>
+              )}
+              {post && showTrigger && (
+                <>
+                  {platform === "reddit" && <MockReddit post={post} />}
+                  {platform === "twitter" && <MockTwitter post={post} />}
+                  {platform === "discord" && <MockDiscord post={post} />}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <PugBuddy />
     </div>

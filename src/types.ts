@@ -1,5 +1,5 @@
 export type Platform = "reddit" | "twitter" | "discord";
-export type ExerciseMode = "standard" | "hybrid";
+export type ExerciseMode = "standard" | "hybrid" | "split";
 export type Placement = "username" | "body" | "reply";
 export type TriggerFrequency = "less" | "normal" | "more";
 

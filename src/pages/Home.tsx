@@ -154,7 +154,7 @@ export default function Home() {
               <button
                 onClick={() => canHybrid && setMode("hybrid")}
                 disabled={!canHybrid}
-                title={!canHybrid ? "Add hobby search terms in Settings to enable hybrid mode" : ""}
+                title={!canHybrid ? "Add hobby search terms in Settings to enable" : ""}
                 className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
                   mode === "hybrid"
                     ? "bg-teal-600 border-teal-500 text-white"
@@ -163,9 +163,24 @@ export default function Home() {
               >
                 Hybrid
               </button>
+              <button
+                onClick={() => canHybrid && setMode("split")}
+                disabled={!canHybrid}
+                title={!canHybrid ? "Add hobby search terms in Settings to enable" : ""}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
+                  mode === "split"
+                    ? "bg-violet-600 border-violet-500 text-white"
+                    : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
+                } disabled:opacity-40 disabled:cursor-not-allowed`}
+              >
+                Split
+              </button>
             </div>
             {mode === "hybrid" && (
               <p className="text-xs text-gray-500 mt-1.5">First half: trigger exposure · Second half: hobby search</p>
+            )}
+            {mode === "split" && (
+              <p className="text-xs text-gray-500 mt-1.5">Trigger mock and hobby side by side the whole session</p>
             )}
           </div>
 

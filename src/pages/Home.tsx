@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSettings, getStreak, hasSessionToday } from "../store";
 import { initNotifications } from "../notifications";
+import { getDailyFact } from "../erpFacts";
 import type { ExerciseMode } from "../types";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
   const settings = getSettings();
   const streak = getStreak();
   const doneToday = hasSessionToday();
+  const fact = getDailyFact();
   const canStart = settings.triggerWords.length > 0;
   const canHybrid = canStart && settings.hobbySearchTerms.length > 0;
   const streakAtRisk = streak > 0 && !doneToday;
@@ -83,6 +85,14 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* daily fact */}
+      {!showStart && (
+        <div className="w-full max-w-xs rounded-xl px-4 py-3 mb-4 border bg-[#1a0f0f] border-red-900/60">
+          <p className="text-red-400 text-xs font-semibold mb-1">{fact.stat}</p>
+          <p className="text-gray-400 text-xs leading-relaxed">{fact.detail}</p>
+        </div>
+      )}
 
       {!showStart ? (
         <div className="flex flex-col items-center gap-3 w-full max-w-xs">

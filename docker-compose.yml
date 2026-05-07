@@ -5,3 +5,16 @@ services:
     ports:
       - "8081:80"
     restart: unless-stopped
+
+  dev:
+    image: node:20-alpine
+    container_name: erp-app-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "npm ci && npm run dev -- --host"
+    profiles:
+      - dev

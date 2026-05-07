@@ -169,9 +169,9 @@ export default function Settings() {
                 ))}
               </div>
               <div className="flex justify-between text-xs text-gray-600 mt-1 px-1">
-                <span>Once, in body only</span>
-                <span>Random placement</span>
-                <span>Body + replies</span>
+                <span>Once, body only</span>
+                <span>2–3 times</span>
+                <span>4–5 times</span>
               </div>
             </div>
           </section>

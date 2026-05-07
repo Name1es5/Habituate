@@ -14,6 +14,16 @@ const MESSAGES = [
   "Almost there!",
   "This is how recovery happens.",
   "One breath at a time.",
+  "Woof! You're doing it!",
+  "OCD doesn't get to win today.",
+  "You showed up. That's huge.",
+  "Running alongside you 🐾",
+  "Shake it off!",
+  "You're a good human.",
+  "Tail wags for you!",
+  "The pug believes in you.",
+  "Stronger than the thought.",
+  "This too shall pass. Probably quickly.",
 ];
 
 export default function PugBuddy() {
@@ -46,7 +56,7 @@ export default function PugBuddy() {
       <img
         src={pugGif}
         alt="running pug"
-        className="w-16 h-16 object-contain"
+        className="w-24 h-24 object-contain"
         style={{ imageRendering: "pixelated" }}
       />
     </div>

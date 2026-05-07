@@ -139,7 +139,7 @@ export default function Settings() {
               )}
               {settings.triggerWords.map((w) => (
                 <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
-                  {w}
+                  {w[0]}{"•".repeat(Math.max(1, w.length - 1))}
                   <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
                 </span>
               ))}

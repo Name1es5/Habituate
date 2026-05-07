@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* daily fact */}
       {!showStart && (
-        <div className="w-full max-w-xs rounded-xl px-4 py-3 mb-4 border bg-[#1a0f0f] border-red-900/60">
+        <div className="w-full max-w-xs rounded-xl px-4 py-3 mt-3 mb-4 border bg-[#1a0f0f] border-red-900/60">
           <p className="text-red-400 text-xs font-semibold mb-1">{fact.stat}</p>
           <p className="text-gray-400 text-xs leading-relaxed">{fact.detail}</p>
         </div>

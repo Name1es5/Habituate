@@ -17,4 +17,5 @@ export interface AppSettings {
   triggerWords: string[];
   hobbySearchTerms: string[];
   triggerFrequency: TriggerFrequency;
+  showPugBuddy: boolean;
 }

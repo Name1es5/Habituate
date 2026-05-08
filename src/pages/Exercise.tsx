@@ -238,7 +238,7 @@ export default function Exercise() {
         </div>
       )}
 
-      <PugBuddy />
+      {settings.showPugBuddy && <PugBuddy />}
     </div>
   );
 }

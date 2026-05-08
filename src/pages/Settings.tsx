@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getSettings, saveSettings, getNotifSettings, saveNotifSettings } from "../store";
 import { requestNotificationPermission, getNotificationPermission, scheduleNotification } from "../notifications";
 
-type Tab = "triggers" | "hobbies" | "general";
+type Tab = "triggers" | "hobbies" | "general" | "misc";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -80,6 +80,7 @@ export default function Settings() {
     { id: "triggers", label: "Trigger Words" },
     { id: "hobbies", label: "Hobbies" },
     { id: "general", label: "General" },
+    { id: "misc", label: "Misc" },
   ];
 
   return (
@@ -208,6 +209,35 @@ export default function Settings() {
                   <button onClick={() => removeTerm(t)} className="text-teal-500 hover:text-white leading-none">×</button>
                 </span>
               ))}
+            </div>
+          </section>
+        )}
+
+        {/* --- Misc tab --- */}
+        {tab === "misc" && (
+          <section>
+            <h2 className="text-base font-semibold mb-4">Display</h2>
+            <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
+              <div>
+                <div className="text-sm font-medium text-white">Motivational pug</div>
+                <div className="text-xs text-gray-500">Show the running pug during exercises</div>
+              </div>
+              <button
+                onClick={() => {
+                  const updated = { ...settings, showPugBuddy: !settings.showPugBuddy };
+                  setSettings(updated);
+                  saveSettings(updated);
+                }}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  settings.showPugBuddy ? "bg-violet-600" : "bg-gray-700"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    settings.showPugBuddy ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
             </div>
           </section>
         )}

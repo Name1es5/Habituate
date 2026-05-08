@@ -8,6 +8,7 @@ const defaultSettings: AppSettings = {
   triggerWords: [],
   hobbySearchTerms: [],
   triggerFrequency: "normal",
+  showPugBuddy: true,
 };
 
 export interface NotifSettings {

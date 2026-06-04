@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn Promoted Jobs Blocker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f3f2ef;
+      color: #1d2226;
+    }
+
+    header {
+      background: #0a66c2;
+      color: #fff;
+      padding: 14px 16px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header svg { flex-shrink: 0; }
+
+    header h1 {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    main {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .row {
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .sublabel {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    /* Toggle switch */
+    .switch {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #ccc;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+
+    input:checked + .slider { background: #0a66c2; }
+    input:checked + .slider::before { transform: translateX(18px); }
+
+    /* Counter */
+    .counter-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .counter-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #0a66c2;
+      line-height: 1;
+    }
+
+    .counter-desc {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      display: inline-block;
+      margin-right: 5px;
+      transition: background .2s;
+    }
+
+    .status-dot.active { background: #57c168; }
+
+    footer {
+      padding: 0 16px 14px;
+      font-size: 10px;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- LinkedIn-style briefcase icon -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 7h-4V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/>
+    </svg>
+    <h1>LinkedIn Promoted<br>Jobs Blocker</h1>
+  </header>
+
+  <main>
+    <div class="row">
+      <div>
+        <div class="label">
+          <span class="status-dot" id="statusDot"></span>Blocking enabled
+        </div>
+        <div class="sublabel">Hide promoted listings on this page</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="counter-box">
+      <div class="counter-number" id="count">—</div>
+      <div class="counter-desc">promoted jobs hidden this session</div>
+    </div>
+  </main>
+
+  <footer>Only affects linkedin.com &bull; no data is collected</footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

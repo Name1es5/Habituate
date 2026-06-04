@@ -1,0 +1,5 @@
+/* Utility class applied by the extension — not used directly but kept as
+   a fallback for any cards that survive the JS hide. */
+[data-ljb-hidden] {
+  display: none !important;
+}

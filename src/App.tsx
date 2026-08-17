@@ -4,6 +4,7 @@ import Settings from "./pages/Settings";
 import Exercise from "./pages/Exercise";
 import PostExercise from "./pages/PostExercise";
 import History from "./pages/History";
+import Learn from "./pages/Learn";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/post-exercise" element={<PostExercise />} />
         <Route path="/history" element={<History />} />
+        <Route path="/learn" element={<Learn />} />
       </Routes>
     </BrowserRouter>
   );

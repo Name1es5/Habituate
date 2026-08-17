@@ -32,12 +32,20 @@ export default function Home() {
     <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col items-center justify-center p-6">
       {/* top bar */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4">
-        <button
-          onClick={() => navigate("/settings")}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white text-sm font-medium transition"
-        >
-          ⚙ Settings
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/settings")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white text-sm font-medium transition"
+          >
+            ⚙ Settings
+          </button>
+          <button
+            onClick={() => navigate("/learn")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 hover:text-white text-sm font-medium transition"
+          >
+            📖 Learn
+          </button>
+        </div>
 
         <button
           onClick={() => navigate("/history")}

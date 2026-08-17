@@ -2,8 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSettings, saveSettings, getNotifSettings, saveNotifSettings } from "../store";
 import { requestNotificationPermission, getNotificationPermission, scheduleNotification } from "../notifications";
+import type { WordDifficulty } from "../types";
 
 type Tab = "triggers" | "hobbies" | "general" | "misc";
+
+const DIFFICULTY_CYCLE: WordDifficulty[] = ["easy", "medium", "hard"];
+const DIFFICULTY_COLOR: Record<WordDifficulty, string> = {
+  easy: "bg-green-400",
+  medium: "bg-yellow-400",
+  hard: "bg-red-400",
+};
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -25,7 +33,17 @@ export default function Settings() {
   }
 
   function removeWord(w: string) {
-    const updated = { ...settings, triggerWords: settings.triggerWords.filter((x) => x !== w) };
+    const difficulty = { ...settings.wordDifficulty };
+    delete difficulty[w];
+    const updated = { ...settings, triggerWords: settings.triggerWords.filter((x) => x !== w), wordDifficulty: difficulty };
+    setSettings(updated);
+    saveSettings(updated);
+  }
+
+  function cycleDifficulty(w: string) {
+    const current: WordDifficulty = settings.wordDifficulty[w] ?? "medium";
+    const next = DIFFICULTY_CYCLE[(DIFFICULTY_CYCLE.indexOf(current) + 1) % DIFFICULTY_CYCLE.length];
+    const updated = { ...settings, wordDifficulty: { ...settings.wordDifficulty, [w]: next } };
     setSettings(updated);
     saveSettings(updated);
   }
@@ -166,13 +184,31 @@ export default function Settings() {
               {settings.triggerWords.length === 0 && (
                 <p className="text-gray-500 text-sm">No trigger words added yet.</p>
               )}
-              {settings.triggerWords.map((w) => (
-                <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
-                  {showTriggerWords ? w : `${w[0]}${"•".repeat(Math.max(1, w.length - 1))}`}
-                  <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
-                </span>
-              ))}
+              {settings.triggerWords.map((w) => {
+                const diff: WordDifficulty = settings.wordDifficulty[w] ?? "medium";
+                return (
+                  <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
+                    <button
+                      onClick={() => cycleDifficulty(w)}
+                      title={`Difficulty: ${diff} — click to change`}
+                      className={`w-2.5 h-2.5 rounded-full flex-shrink-0 hover:opacity-70 transition-opacity ${DIFFICULTY_COLOR[diff]}`}
+                    />
+                    {showTriggerWords ? w : `${w[0]}${"•".repeat(Math.max(1, w.length - 1))}`}
+                    <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
+                  </span>
+                );
+              })}
             </div>
+            {settings.triggerWords.length > 0 && (
+              <div className="flex gap-3 mb-6 -mt-4">
+                {(["easy", "medium", "hard"] as const).map((d) => (
+                  <span key={d} className="flex items-center gap-1 text-xs text-gray-600">
+                    <span className={`w-2 h-2 rounded-full ${DIFFICULTY_COLOR[d]}`} />
+                    {d}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {/* frequency */}
             <div>
@@ -198,9 +234,9 @@ export default function Settings() {
                 ))}
               </div>
               <div className="flex justify-between text-xs text-gray-600 mt-1 px-1">
-                <span>Once, body only</span>
                 <span>2–3 times</span>
                 <span>4–5 times</span>
+                <span>6–8 times</span>
               </div>
             </div>
           </section>

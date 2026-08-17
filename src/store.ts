@@ -9,6 +9,7 @@ const defaultSettings: AppSettings = {
   hobbySearchTerms: [],
   triggerFrequency: "normal",
   showPugBuddy: true,
+  wordDifficulty: {},
 };
 
 export interface NotifSettings {

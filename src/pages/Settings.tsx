@@ -2,8 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSettings, saveSettings, getNotifSettings, saveNotifSettings } from "../store";
 import { requestNotificationPermission, getNotificationPermission, scheduleNotification } from "../notifications";
+import type { WordDifficulty } from "../types";
 
 type Tab = "triggers" | "hobbies" | "general" | "misc";
+
+const DIFFICULTY_CYCLE: WordDifficulty[] = ["easy", "medium", "hard"];
+const DIFFICULTY_COLOR: Record<WordDifficulty, string> = {
+  easy: "bg-green-400",
+  medium: "bg-yellow-400",
+  hard: "bg-red-400",
+};
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -12,6 +20,7 @@ export default function Settings() {
   const [notif, setNotif] = useState(getNotifSettings);
   const [wordInput, setWordInput] = useState("");
   const [termInput, setTermInput] = useState("");
+  const [showTriggerWords, setShowTriggerWords] = useState(false);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
 
   function addWord() {
@@ -24,7 +33,17 @@ export default function Settings() {
   }
 
   function removeWord(w: string) {
-    const updated = { ...settings, triggerWords: settings.triggerWords.filter((x) => x !== w) };
+    const difficulty = { ...settings.wordDifficulty };
+    delete difficulty[w];
+    const updated = { ...settings, triggerWords: settings.triggerWords.filter((x) => x !== w), wordDifficulty: difficulty };
+    setSettings(updated);
+    saveSettings(updated);
+  }
+
+  function cycleDifficulty(w: string) {
+    const current: WordDifficulty = settings.wordDifficulty[w] ?? "medium";
+    const next = DIFFICULTY_CYCLE[(DIFFICULTY_CYCLE.indexOf(current) + 1) % DIFFICULTY_CYCLE.length];
+    const updated = { ...settings, wordDifficulty: { ...settings.wordDifficulty, [w]: next } };
     setSettings(updated);
     saveSettings(updated);
   }
@@ -134,17 +153,62 @@ export default function Settings() {
               </button>
             </div>
 
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-gray-500">{settings.triggerWords.length} word{settings.triggerWords.length !== 1 ? "s" : ""}</span>
+              {settings.triggerWords.length > 0 && (
+                <button
+                  onClick={() => setShowTriggerWords((v) => !v)}
+                  className="text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition"
+                >
+                  {showTriggerWords ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" />
+                        <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                      </svg>
+                      Hide
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      </svg>
+                      Show
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
             <div className="flex flex-wrap gap-2 mb-6">
               {settings.triggerWords.length === 0 && (
                 <p className="text-gray-500 text-sm">No trigger words added yet.</p>
               )}
-              {settings.triggerWords.map((w) => (
-                <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
-                  {w[0]}{"•".repeat(Math.max(1, w.length - 1))}
-                  <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
-                </span>
-              ))}
+              {settings.triggerWords.map((w) => {
+                const diff: WordDifficulty = settings.wordDifficulty[w] ?? "medium";
+                return (
+                  <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
+                    <button
+                      onClick={() => cycleDifficulty(w)}
+                      title={`Difficulty: ${diff} — click to change`}
+                      className={`w-2.5 h-2.5 rounded-full flex-shrink-0 hover:opacity-70 transition-opacity ${DIFFICULTY_COLOR[diff]}`}
+                    />
+                    {showTriggerWords ? w : `${w[0]}${"•".repeat(Math.max(1, w.length - 1))}`}
+                    <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
+                  </span>
+                );
+              })}
             </div>
+            {settings.triggerWords.length > 0 && (
+              <div className="flex gap-3 mb-6 -mt-4">
+                {(["easy", "medium", "hard"] as const).map((d) => (
+                  <span key={d} className="flex items-center gap-1 text-xs text-gray-600">
+                    <span className={`w-2 h-2 rounded-full ${DIFFICULTY_COLOR[d]}`} />
+                    {d}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {/* frequency */}
             <div>
@@ -170,9 +234,9 @@ export default function Settings() {
                 ))}
               </div>
               <div className="flex justify-between text-xs text-gray-600 mt-1 px-1">
-                <span>Once, body only</span>
                 <span>2–3 times</span>
                 <span>4–5 times</span>
+                <span>6–8 times</span>
               </div>
             </div>
           </section>

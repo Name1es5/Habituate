@@ -53,8 +53,8 @@ export default function StreakGrid({ streak }: { streak: number }) {
                   day.hasSession
                     ? "bg-violet-500"
                     : day.isToday
-                    ? "bg-[#252a40] ring-1 ring-violet-700"
-                    : "bg-[#1e2238]"
+                    ? "bg-violet-200 ring-1 ring-violet-400"
+                    : "bg-violet-100"
                 }`}
               />
             ))}
@@ -64,20 +64,20 @@ export default function StreakGrid({ streak }: { streak: number }) {
 
       {/* stat */}
       {streak > 0 && (
-        <div className="bg-[#0d1a0d] border border-green-900/60 rounded-xl px-4 py-3">
-          <p className="text-green-400 text-xs leading-relaxed">
+        <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+          <p className="text-green-700 text-xs leading-relaxed">
             People who practice ERP consistently for{" "}
             <span className="font-semibold">{streak} day{streak !== 1 ? "s" : ""}</span> report
             roughly a{" "}
-            <span className="font-bold text-green-300 text-sm">{reduction}%</span>{" "}
+            <span className="font-bold text-green-800 text-sm">{reduction}%</span>{" "}
             decrease in anxiety symptoms.
-            <span className="text-green-700"> Keep going.</span>
+            <span className="text-green-500"> Keep going.</span>
           </p>
         </div>
       )}
       {streak === 0 && (
-        <div className="bg-[#1a0f0f] border border-red-900/40 rounded-xl px-4 py-3">
-          <p className="text-gray-500 text-xs leading-relaxed">
+        <div className="bg-white border border-violet-200 rounded-xl px-4 py-3">
+          <p className="text-[#8b80a5] text-xs leading-relaxed">
             Start a session today to begin your streak. Consistent daily practice
             is what drives recovery.
           </p>

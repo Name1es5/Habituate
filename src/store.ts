@@ -7,8 +7,10 @@ const NOTIF_KEY = "erp_notif";
 const defaultSettings: AppSettings = {
   triggerWords: [],
   hobbySearchTerms: [],
+  imageSearchTerms: [],
   triggerFrequency: "normal",
   showPugBuddy: true,
+  calmingMusic: false,
   wordDifficulty: {},
 };
 

@@ -44,6 +44,9 @@ export default function Exercise() {
   const [searchTerm] = useState<string>(() =>
     settings.hobbySearchTerms.length > 0 ? rand(settings.hobbySearchTerms) : ""
   );
+  const [imageTerm] = useState<string>(() =>
+    settings.imageSearchTerms.length > 0 ? rand(settings.imageSearchTerms) : ""
+  );
 
   const triggerWord = settings.triggerWords.length > 0 ? rand(settings.triggerWords) : "";
   const placement = rand(PLACEMENTS);
@@ -57,7 +60,7 @@ export default function Exercise() {
     }
   }, [platform]);
 
-  // Delay before trigger word appears (3-10 seconds)
+  // Delay before trigger/image appears (3-10 seconds)
   useEffect(() => {
     const delay = 3000 + Math.random() * 7000;
     const t = setTimeout(() => setShowTrigger(true), delay);
@@ -72,7 +75,7 @@ export default function Exercise() {
         if (s <= 1) {
           clearInterval(interval);
           navigate("/post-exercise", {
-            state: { minutes, mode, platform, sessionDate: new Date().toISOString() },
+            state: { minutes, mode, platform, imageTerm, sessionDate: new Date().toISOString() },
           });
           return 0;
         }
@@ -102,25 +105,25 @@ export default function Exercise() {
       return;
     }
     navigate("/post-exercise", {
-      state: { minutes, mode, platform, sessionDate: new Date().toISOString() },
+      state: { minutes, mode, platform, imageTerm, sessionDate: new Date().toISOString() },
     });
   }
 
   function confirmExit() {
     navigate("/post-exercise", {
-      state: { minutes, mode, platform, sessionDate: new Date().toISOString() },
+      state: { minutes, mode, platform, imageTerm, sessionDate: new Date().toISOString() },
     });
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col">
+    <div className="min-h-screen bg-[#f0edfb] text-[#1e1230] flex flex-col">
       {/* exit nudge overlay */}
       {showExitNudge && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-6">
-          <div className="bg-[#171a2d] border border-[#252a40] rounded-2xl p-6 max-w-xs w-full text-center space-y-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-6">
+          <div className="bg-white border border-violet-200 rounded-2xl p-6 max-w-xs w-full text-center space-y-4 shadow-xl">
             <div className="text-3xl">🌿</div>
-            <h2 className="text-lg font-semibold">Stay a little longer?</h2>
-            <p className="text-gray-400 text-sm">
+            <h2 className="text-lg font-semibold text-[#1e1230]">Stay a little longer?</h2>
+            <p className="text-[#6b5f85] text-sm">
               You've gone {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")} so far. The discomfort usually peaks and fades — you're closer than it feels.
             </p>
             <div className="flex gap-2">
@@ -132,7 +135,7 @@ export default function Exercise() {
               </button>
               <button
                 onClick={confirmExit}
-                className="flex-1 bg-[#1e2238] hover:bg-[#252a40] text-gray-400 hover:text-white font-medium py-2.5 rounded-xl transition text-sm"
+                className="flex-1 bg-violet-50 hover:bg-violet-100 text-[#6b5f85] hover:text-[#1e1230] font-medium py-2.5 rounded-xl transition text-sm border border-violet-200"
               >
                 Exit anyway
               </button>
@@ -142,43 +145,46 @@ export default function Exercise() {
       )}
 
       {/* top bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e2238]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-violet-200 bg-white shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="text-2xl font-mono font-bold text-violet-400">{formatTime(secondsLeft)}</span>
+          <span className="text-2xl font-mono font-bold text-violet-600">{formatTime(secondsLeft)}</span>
           {mode === "hybrid" && (
-            <span className={`text-xs px-2 py-0.5 rounded-full ${inHobbyHalf ? "bg-teal-900 text-teal-300" : "bg-violet-900 text-violet-300"}`}>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${inHobbyHalf ? "bg-teal-100 text-teal-700" : "bg-violet-100 text-violet-700"}`}>
               {inHobbyHalf ? "hobby half" : "exposure half"}
             </span>
           )}
           {mode === "split" && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-violet-900 text-violet-300">split</span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">split</span>
+          )}
+          {mode === "images" && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">images</span>
           )}
         </div>
         <button
           onClick={handleExit}
-          className="text-gray-500 hover:text-white text-sm border border-[#252a40] hover:border-gray-500 px-3 py-1.5 rounded-lg transition"
+          className="text-[#8b80a5] hover:text-[#1e1230] text-sm border border-violet-200 hover:border-violet-400 px-3 py-1.5 rounded-lg transition"
         >
           Exit
         </button>
       </div>
 
       {/* progress bar */}
-      <div className="h-1.5 bg-[#1e2238]">
+      <div className="h-1.5 bg-violet-100">
         <div
-          className={`h-1.5 transition-all duration-1000 ${inHobbyHalf ? "bg-teal-500" : "bg-violet-500"}`}
+          className={`h-1.5 transition-all duration-1000 ${inHobbyHalf ? "bg-teal-500" : mode === "images" ? "bg-indigo-500" : "bg-violet-500"}`}
           style={{ width: `${progressPct}%` }}
         />
       </div>
 
-      {/* content */}
-      {mode === "split" ? (
+      {/* content — standard / hybrid / split modes only */}
+      {mode !== "images" && mode === "split" ? (
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           {/* trigger half */}
-          <div className="flex-1 overflow-auto border-b lg:border-b-0 lg:border-r border-[#1e2238]">
+          <div className="flex-1 overflow-auto border-b lg:border-b-0 lg:border-r border-violet-200">
             {!showTrigger && (
               <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-8">
                 <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+                <p className="text-[#8b80a5] text-sm">Take a breath. Your session is loading.</p>
               </div>
             )}
             {post && showTrigger && (
@@ -192,8 +198,8 @@ export default function Exercise() {
 
           {/* hobby half */}
           <div className="flex-1 flex flex-col overflow-hidden">
-            <p className="text-xs text-gray-500 text-center py-1.5 border-b border-[#1e2238] flex-shrink-0">
-              <span className="text-teal-400">{searchTerm}</span>
+            <p className="text-xs text-[#8b80a5] text-center py-1.5 border-b border-violet-200 flex-shrink-0 bg-white">
+              <span className="text-teal-600">{searchTerm}</span>
             </p>
             <iframe
               key={searchTerm}
@@ -204,15 +210,15 @@ export default function Exercise() {
             />
           </div>
         </div>
-      ) : (
+      ) : mode !== "images" ? (
         <div className="flex-1 p-4 overflow-auto">
           {inHobbyHalf && mode === "hybrid" ? (
             <div className="w-full h-full flex flex-col gap-2">
-              <p className="text-xs text-gray-500 text-center">Searching: <span className="text-teal-400">{searchTerm}</span></p>
+              <p className="text-xs text-[#8b80a5] text-center">Searching: <span className="text-teal-600">{searchTerm}</span></p>
               <iframe
                 key={searchTerm}
                 src={`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}&igu=1`}
-                className="w-full flex-1 rounded-xl border border-[#252a40]"
+                className="w-full flex-1 rounded-xl border border-violet-200"
                 style={{ minHeight: "calc(100vh - 140px)" }}
                 title="hobby search"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -223,7 +229,7 @@ export default function Exercise() {
               {!showTrigger && (
                 <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
                   <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                  <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+                  <p className="text-[#8b80a5] text-sm">Take a breath. Your session is loading.</p>
                 </div>
               )}
               {post && showTrigger && (
@@ -236,9 +242,44 @@ export default function Exercise() {
             </div>
           )}
         </div>
+      ) : null}
+
+      {/* images mode content */}
+      {mode === "images" && (
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {!showTrigger ? (
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center p-8">
+              <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+              <p className="text-[#8b80a5] text-sm">Take a breath. Your session is loading.</p>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <p className="text-xs text-[#8b80a5] text-center py-1.5 border-b border-violet-200 flex-shrink-0 bg-white">
+                <span className="text-indigo-600 font-medium">{imageTerm}</span>
+              </p>
+              <iframe
+                key={imageTerm}
+                src={`https://www.google.com/search?q=${encodeURIComponent(imageTerm)}&tbm=isch&safe=active&igu=1`}
+                className="flex-1 w-full"
+                title="image search"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
+          )}
+        </div>
       )}
 
       {settings.showPugBuddy && <PugBuddy />}
+
+      {/* calming music — hidden YouTube player */}
+      {settings.calmingMusic && (
+        <iframe
+          src="https://www.youtube.com/embed/yFDo_uR4-cc?autoplay=1&loop=1&playlist=yFDo_uR4-cc"
+          allow="autoplay"
+          style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none", bottom: 0, left: 0 }}
+          title="calming music"
+        />
+      )}
     </div>
   );
 }

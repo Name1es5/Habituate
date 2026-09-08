@@ -45,7 +45,7 @@ export default function PugBuddy() {
     <div className="fixed bottom-4 right-4 flex flex-col items-end gap-1 z-40 select-none">
       {/* speech bubble */}
       <div
-        className={`bg-[#171a2d] border border-[#252a40] text-white text-xs px-3 py-2 rounded-2xl rounded-br-sm max-w-[160px] text-center shadow-lg transition-opacity duration-300 ${
+        className={`bg-white border border-violet-200 text-[#1e1230] text-xs px-3 py-2 rounded-2xl rounded-br-sm max-w-[160px] text-center shadow-md transition-opacity duration-300 ${
           visible ? "opacity-100" : "opacity-0"
         }`}
       >

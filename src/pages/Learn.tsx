@@ -104,23 +104,23 @@ export default function Learn() {
   const articles = CONTENT[section];
 
   return (
-    <div className="min-h-screen bg-[#0d0f1a] text-white max-w-lg mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#f0edfb] text-[#1e1230] max-w-lg mx-auto flex flex-col">
       <div className="px-6 pt-6 pb-0">
-        <button onClick={() => navigate("/")} className="text-gray-400 hover:text-white text-sm mb-5 flex items-center gap-1">
+        <button onClick={() => navigate("/")} className="text-[#8b80a5] hover:text-[#6b5f85] text-sm mb-5 flex items-center gap-1 transition">
           ← Back
         </button>
-        <h1 className="text-2xl font-bold mb-1">Learn</h1>
-        <p className="text-gray-500 text-sm mb-5">How ERP works and how to make the most of it.</p>
+        <h1 className="text-2xl font-bold mb-1 text-[#1e1230]">Learn</h1>
+        <p className="text-[#8b80a5] text-sm mb-5">How ERP works and how to make the most of it.</p>
 
-        <div className="flex border-b border-[#2a2a2a]">
+        <div className="flex border-b border-violet-200">
           {sections.map((s) => (
             <button
               key={s.id}
               onClick={() => setSection(s.id)}
               className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px whitespace-nowrap ${
                 section === s.id
-                  ? "border-violet-500 text-white"
-                  : "border-transparent text-gray-500 hover:text-gray-300"
+                  ? "border-violet-500 text-violet-700"
+                  : "border-transparent text-[#8b80a5] hover:text-[#6b5f85]"
               }`}
             >
               {s.label}
@@ -131,9 +131,9 @@ export default function Learn() {
 
       <div className="flex-1 px-6 pt-6 pb-10 space-y-6">
         {articles.map((article) => (
-          <div key={article.heading} className="bg-[#13162a] border border-[#1e2238] rounded-xl px-5 py-4">
-            <h2 className="text-base font-semibold text-white mb-2">{article.heading}</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">{article.body}</p>
+          <div key={article.heading} className="bg-white border border-violet-200 rounded-xl px-5 py-4 shadow-sm">
+            <h2 className="text-base font-semibold text-[#1e1230] mb-2">{article.heading}</h2>
+            <p className="text-[#6b5f85] text-sm leading-relaxed">{article.body}</p>
           </div>
         ))}
       </div>

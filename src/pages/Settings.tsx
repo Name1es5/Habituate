@@ -4,7 +4,7 @@ import { getSettings, saveSettings, getNotifSettings, saveNotifSettings } from "
 import { requestNotificationPermission, getNotificationPermission, scheduleNotification } from "../notifications";
 import type { WordDifficulty } from "../types";
 
-type Tab = "triggers" | "hobbies" | "general" | "misc";
+type Tab = "triggers" | "hobbies" | "images" | "general" | "misc";
 
 const DIFFICULTY_CYCLE: WordDifficulty[] = ["easy", "medium", "hard"];
 const DIFFICULTY_COLOR: Record<WordDifficulty, string> = {
@@ -20,6 +20,7 @@ export default function Settings() {
   const [notif, setNotif] = useState(getNotifSettings);
   const [wordInput, setWordInput] = useState("");
   const [termInput, setTermInput] = useState("");
+  const [imageInput, setImageInput] = useState("");
   const [showTriggerWords, setShowTriggerWords] = useState(false);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
 
@@ -63,6 +64,21 @@ export default function Settings() {
     saveSettings(updated);
   }
 
+  function addImageTerm() {
+    const t = imageInput.trim();
+    if (!t || settings.imageSearchTerms.includes(t)) return;
+    const updated = { ...settings, imageSearchTerms: [...settings.imageSearchTerms, t] };
+    setSettings(updated);
+    saveSettings(updated);
+    setImageInput("");
+  }
+
+  function removeImageTerm(t: string) {
+    const updated = { ...settings, imageSearchTerms: settings.imageSearchTerms.filter((x) => x !== t) };
+    setSettings(updated);
+    saveSettings(updated);
+  }
+
   async function handleEnableNotifications() {
     const perm = await requestNotificationPermission();
     setNotifPermission(perm);
@@ -98,29 +114,30 @@ export default function Settings() {
   const tabs: { id: Tab; label: string }[] = [
     { id: "triggers", label: "Trigger Words" },
     { id: "hobbies", label: "Hobbies" },
+    { id: "images", label: "Images" },
     { id: "general", label: "General" },
     { id: "misc", label: "Misc" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d0f1a] text-white max-w-lg mx-auto flex flex-col">
+    <div className="min-h-screen bg-[#f0edfb] text-[#1e1230] max-w-lg mx-auto flex flex-col">
       {/* header */}
       <div className="px-6 pt-6 pb-0">
-        <button onClick={() => navigate("/")} className="text-gray-400 hover:text-white text-sm mb-5 flex items-center gap-1">
+        <button onClick={() => navigate("/")} className="text-[#8b80a5] hover:text-[#6b5f85] text-sm mb-5 flex items-center gap-1 transition">
           ← Back
         </button>
-        <h1 className="text-2xl font-bold mb-5">Settings</h1>
+        <h1 className="text-2xl font-bold mb-5 text-[#1e1230]">Settings</h1>
 
         {/* tabs */}
-        <div className="flex border-b border-[#2a2a2a]">
+        <div className="flex border-b border-violet-200 overflow-x-auto">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px ${
+              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px whitespace-nowrap ${
                 tab === t.id
-                  ? "border-violet-500 text-white"
-                  : "border-transparent text-gray-500 hover:text-gray-300"
+                  ? "border-violet-500 text-violet-700"
+                  : "border-transparent text-[#8b80a5] hover:text-[#6b5f85]"
               }`}
             >
               {t.label}
@@ -135,11 +152,11 @@ export default function Settings() {
         {/* --- Trigger Words tab --- */}
         {tab === "triggers" && (
           <section>
-            <p className="text-gray-400 text-sm mb-4">Words that get embedded in mock social posts during exercises.</p>
+            <p className="text-[#6b5f85] text-sm mb-4">Words that get embedded in mock social posts during exercises.</p>
 
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+                className="flex-1 bg-white border border-violet-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 text-[#1e1230] placeholder-[#b0a6c8]"
                 placeholder="Add a trigger word..."
                 value={wordInput}
                 onChange={(e) => setWordInput(e.target.value)}
@@ -147,18 +164,18 @@ export default function Settings() {
               />
               <button
                 onClick={addWord}
-                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
               >
                 Add
               </button>
             </div>
 
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-gray-500">{settings.triggerWords.length} word{settings.triggerWords.length !== 1 ? "s" : ""}</span>
+              <span className="text-xs text-[#8b80a5]">{settings.triggerWords.length} word{settings.triggerWords.length !== 1 ? "s" : ""}</span>
               {settings.triggerWords.length > 0 && (
                 <button
                   onClick={() => setShowTriggerWords((v) => !v)}
-                  className="text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition"
+                  className="text-xs text-[#8b80a5] hover:text-[#6b5f85] flex items-center gap-1 transition"
                 >
                   {showTriggerWords ? (
                     <>
@@ -182,19 +199,19 @@ export default function Settings() {
             </div>
             <div className="flex flex-wrap gap-2 mb-6">
               {settings.triggerWords.length === 0 && (
-                <p className="text-gray-500 text-sm">No trigger words added yet.</p>
+                <p className="text-[#8b80a5] text-sm">No trigger words added yet.</p>
               )}
               {settings.triggerWords.map((w) => {
                 const diff: WordDifficulty = settings.wordDifficulty[w] ?? "medium";
                 return (
-                  <span key={w} className="flex items-center gap-1.5 bg-[#2a1a2e] border border-purple-800 text-purple-300 px-3 py-1 rounded-full text-sm">
+                  <span key={w} className="flex items-center gap-1.5 bg-violet-100 border border-violet-300 text-violet-700 px-3 py-1 rounded-full text-sm">
                     <button
                       onClick={() => cycleDifficulty(w)}
                       title={`Difficulty: ${diff} — click to change`}
                       className={`w-2.5 h-2.5 rounded-full flex-shrink-0 hover:opacity-70 transition-opacity ${DIFFICULTY_COLOR[diff]}`}
                     />
                     {showTriggerWords ? w : `${w[0]}${"•".repeat(Math.max(1, w.length - 1))}`}
-                    <button onClick={() => removeWord(w)} className="text-purple-500 hover:text-white leading-none">×</button>
+                    <button onClick={() => removeWord(w)} className="text-violet-400 hover:text-violet-700 leading-none transition">×</button>
                   </span>
                 );
               })}
@@ -202,7 +219,7 @@ export default function Settings() {
             {settings.triggerWords.length > 0 && (
               <div className="flex gap-3 mb-6 -mt-4">
                 {(["easy", "medium", "hard"] as const).map((d) => (
-                  <span key={d} className="flex items-center gap-1 text-xs text-gray-600">
+                  <span key={d} className="flex items-center gap-1 text-xs text-[#8b80a5]">
                     <span className={`w-2 h-2 rounded-full ${DIFFICULTY_COLOR[d]}`} />
                     {d}
                   </span>
@@ -212,8 +229,8 @@ export default function Settings() {
 
             {/* frequency */}
             <div>
-              <label className="text-sm text-gray-400 block mb-1">Word appearances per post</label>
-              <p className="text-xs text-gray-600 mb-3">Controls how many times your trigger word shows up in each mock post.</p>
+              <label className="text-sm text-[#6b5f85] block mb-1">Word appearances per post</label>
+              <p className="text-xs text-[#a89cc0] mb-3">Controls how many times your trigger word shows up in each mock post.</p>
               <div className="flex gap-2">
                 {(["less", "normal", "more"] as const).map((f) => (
                   <button
@@ -226,14 +243,14 @@ export default function Settings() {
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition border capitalize ${
                       settings.triggerFrequency === f
                         ? "bg-violet-600 border-violet-500 text-white"
-                        : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
+                        : "bg-white border-violet-200 text-violet-600 hover:border-violet-400"
                     }`}
                   >
                     {f}
                   </button>
                 ))}
               </div>
-              <div className="flex justify-between text-xs text-gray-600 mt-1 px-1">
+              <div className="flex justify-between text-xs text-[#a89cc0] mt-1 px-1">
                 <span>2–3 times</span>
                 <span>4–5 times</span>
                 <span>6–8 times</span>
@@ -245,11 +262,11 @@ export default function Settings() {
         {/* --- Hobbies tab --- */}
         {tab === "hobbies" && (
           <section>
-            <p className="text-gray-400 text-sm mb-4">Used in hybrid mode — the second half auto-searches one of these in Google.</p>
+            <p className="text-[#6b5f85] text-sm mb-4">Used in hybrid mode — the second half auto-searches one of these in Google.</p>
 
             <div className="flex gap-2 mb-4">
               <input
-                className="flex-1 bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-teal-500"
+                className="flex-1 bg-white border border-teal-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-teal-500 text-[#1e1230] placeholder-[#b0a6c8]"
                 placeholder="e.g. mountain biking, watercolor painting..."
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
@@ -257,7 +274,7 @@ export default function Settings() {
               />
               <button
                 onClick={addTerm}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
               >
                 Add
               </button>
@@ -265,43 +282,105 @@ export default function Settings() {
 
             <div className="flex flex-wrap gap-2">
               {settings.hobbySearchTerms.length === 0 && (
-                <p className="text-gray-500 text-sm">No hobby terms added yet.</p>
+                <p className="text-[#8b80a5] text-sm">No hobby terms added yet.</p>
               )}
               {settings.hobbySearchTerms.map((t) => (
-                <span key={t} className="flex items-center gap-1.5 bg-[#0d2320] border border-teal-800 text-teal-300 px-3 py-1 rounded-full text-sm">
+                <span key={t} className="flex items-center gap-1.5 bg-teal-50 border border-teal-300 text-teal-700 px-3 py-1 rounded-full text-sm">
                   {t}
-                  <button onClick={() => removeTerm(t)} className="text-teal-500 hover:text-white leading-none">×</button>
+                  <button onClick={() => removeTerm(t)} className="text-teal-400 hover:text-teal-700 leading-none transition">×</button>
                 </span>
               ))}
             </div>
           </section>
         )}
 
+        {/* --- Images tab --- */}
+        {tab === "images" && (
+          <section>
+            <p className="text-[#6b5f85] text-sm mb-4">Words or phrases searched in Google Images during an Images mode session.</p>
+
+            <div className="flex gap-2 mb-4">
+              <input
+                className="flex-1 bg-white border border-indigo-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500 text-[#1e1230] placeholder-[#b0a6c8]"
+                placeholder="e.g. backrooms, liminal spaces..."
+                value={imageInput}
+                onChange={(e) => setImageInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addImageTerm()}
+              />
+              <button
+                onClick={addImageTerm}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              {settings.imageSearchTerms.length === 0 && (
+                <p className="text-[#8b80a5] text-sm">No image search terms added yet.</p>
+              )}
+              {settings.imageSearchTerms.map((t) => (
+                <span key={t} className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-300 text-indigo-700 px-3 py-1 rounded-full text-sm">
+                  {t}
+                  <button onClick={() => removeImageTerm(t)} className="text-indigo-400 hover:text-indigo-700 leading-none transition">×</button>
+                </span>
+              ))}
+            </div>
+
+            <p className="text-xs text-[#a89cc0]">SafeSearch is enabled for all image sessions. Google Images opens in a new tab while the timer runs in-app.</p>
+          </section>
+        )}
+
         {/* --- Misc tab --- */}
         {tab === "misc" && (
           <section>
-            <h2 className="text-base font-semibold mb-4">Display</h2>
-            <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
-              <div>
-                <div className="text-sm font-medium text-white">Motivational pug</div>
-                <div className="text-xs text-gray-500">Show the running pug during exercises</div>
-              </div>
-              <button
-                onClick={() => {
-                  const updated = { ...settings, showPugBuddy: !settings.showPugBuddy };
-                  setSettings(updated);
-                  saveSettings(updated);
-                }}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings.showPugBuddy ? "bg-violet-600" : "bg-gray-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    settings.showPugBuddy ? "translate-x-6" : "translate-x-1"
+            <h2 className="text-base font-semibold mb-4 text-[#1e1230]">Display</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-white border border-violet-200 rounded-xl px-4 py-3 shadow-sm">
+                <div>
+                  <div className="text-sm font-medium text-[#1e1230]">Motivational pug</div>
+                  <div className="text-xs text-[#8b80a5]">Show the running pug during exercises</div>
+                </div>
+                <button
+                  onClick={() => {
+                    const updated = { ...settings, showPugBuddy: !settings.showPugBuddy };
+                    setSettings(updated);
+                    saveSettings(updated);
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    settings.showPugBuddy ? "bg-violet-600" : "bg-gray-300"
                   }`}
-                />
-              </button>
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      settings.showPugBuddy ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between bg-white border border-violet-200 rounded-xl px-4 py-3 shadow-sm">
+                <div>
+                  <div className="text-sm font-medium text-[#1e1230]">Calming music</div>
+                  <div className="text-xs text-[#8b80a5]">Play relaxing background music during sessions</div>
+                </div>
+                <button
+                  onClick={() => {
+                    const updated = { ...settings, calmingMusic: !settings.calmingMusic };
+                    setSettings(updated);
+                    saveSettings(updated);
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    settings.calmingMusic ? "bg-violet-600" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      settings.calmingMusic ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </section>
         )}
@@ -309,15 +388,15 @@ export default function Settings() {
         {/* --- General tab --- */}
         {tab === "general" && (
           <section>
-            <h2 className="text-base font-semibold mb-1">Daily Reminder</h2>
-            <p className="text-gray-400 text-sm mb-4">Get a notification each day if you haven't done your session yet.</p>
+            <h2 className="text-base font-semibold mb-1 text-[#1e1230]">Daily Reminder</h2>
+            <p className="text-[#6b5f85] text-sm mb-4">Get a notification each day if you haven't done your session yet.</p>
 
             {notifPermission === "unsupported" && (
-              <p className="text-gray-500 text-sm">Notifications are not supported in this browser.</p>
+              <p className="text-[#8b80a5] text-sm">Notifications are not supported in this browser.</p>
             )}
 
             {notifPermission === "denied" && (
-              <p className="text-amber-400 text-sm">
+              <p className="text-amber-600 text-sm">
                 Notifications are blocked. Enable them in your browser/OS settings, then reload.
               </p>
             )}
@@ -333,26 +412,26 @@ export default function Settings() {
                   </button>
                 ) : (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
+                    <div className="flex items-center justify-between bg-white border border-violet-200 rounded-xl px-4 py-3 shadow-sm">
                       <div>
-                        <div className="text-sm font-medium text-green-400">Reminders on</div>
-                        <div className="text-xs text-gray-500">Notifies at {formatTime12h(notif.time)} if no session yet</div>
+                        <div className="text-sm font-medium text-green-600">Reminders on</div>
+                        <div className="text-xs text-[#8b80a5]">Notifies at {formatTime12h(notif.time)} if no session yet</div>
                       </div>
                       <button
                         onClick={handleDisableNotifications}
-                        className="text-xs text-gray-500 hover:text-white border border-[#333] hover:border-gray-500 px-3 py-1.5 rounded-lg transition"
+                        className="text-xs text-[#8b80a5] hover:text-[#1e1230] border border-violet-200 hover:border-violet-400 px-3 py-1.5 rounded-lg transition"
                       >
                         Turn off
                       </button>
                     </div>
 
                     <div>
-                      <label className="text-sm text-gray-400 block mb-1.5">Reminder time</label>
+                      <label className="text-sm text-[#6b5f85] block mb-1.5">Reminder time</label>
                       <input
                         type="time"
                         value={notif.time}
                         onChange={(e) => handleTimeChange(e.target.value)}
-                        className="bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 text-white"
+                        className="bg-white border border-violet-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 text-[#1e1230]"
                       />
                     </div>
                   </div>

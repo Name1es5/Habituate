@@ -267,7 +267,7 @@ export default function Settings() {
             <div className="flex gap-2 mb-4">
               <input
                 className="flex-1 bg-white border border-teal-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-teal-500 text-[#1e1230] placeholder-[#b0a6c8]"
-                placeholder="e.g. mountain biking, watercolor painting..."
+                placeholder="Add a hobby search term..."
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addTerm()}
@@ -302,7 +302,7 @@ export default function Settings() {
             <div className="flex gap-2 mb-4">
               <input
                 className="flex-1 bg-white border border-indigo-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500 text-[#1e1230] placeholder-[#b0a6c8]"
-                placeholder="e.g. backrooms, liminal spaces..."
+                placeholder="Add an image search term..."
                 value={imageInput}
                 onChange={(e) => setImageInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addImageTerm()}
@@ -327,7 +327,7 @@ export default function Settings() {
               ))}
             </div>
 
-            <p className="text-xs text-[#a89cc0]">SafeSearch is enabled for all image sessions. Google Images opens in a new tab while the timer runs in-app.</p>
+            <p className="text-xs text-[#a89cc0]">SafeSearch is enabled for all image sessions.</p>
           </section>
         )}
 

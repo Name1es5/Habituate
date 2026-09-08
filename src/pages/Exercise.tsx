@@ -249,7 +249,7 @@ export default function Exercise() {
             </div>
           )}
         </div>
-      )}
+      ) : null}
 
       {/* images mode content */}
       {mode === "images" && (

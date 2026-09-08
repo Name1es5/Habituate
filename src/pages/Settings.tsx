@@ -4,7 +4,7 @@ import { getSettings, saveSettings, getNotifSettings, saveNotifSettings } from "
 import { requestNotificationPermission, getNotificationPermission, scheduleNotification } from "../notifications";
 import type { WordDifficulty } from "../types";
 
-type Tab = "triggers" | "hobbies" | "general" | "misc";
+type Tab = "triggers" | "hobbies" | "images" | "general" | "misc";
 
 const DIFFICULTY_CYCLE: WordDifficulty[] = ["easy", "medium", "hard"];
 const DIFFICULTY_COLOR: Record<WordDifficulty, string> = {
@@ -20,6 +20,7 @@ export default function Settings() {
   const [notif, setNotif] = useState(getNotifSettings);
   const [wordInput, setWordInput] = useState("");
   const [termInput, setTermInput] = useState("");
+  const [imageInput, setImageInput] = useState("");
   const [showTriggerWords, setShowTriggerWords] = useState(false);
   const [notifPermission, setNotifPermission] = useState(getNotificationPermission);
 
@@ -63,6 +64,21 @@ export default function Settings() {
     saveSettings(updated);
   }
 
+  function addImageTerm() {
+    const t = imageInput.trim();
+    if (!t || settings.imageSearchTerms.includes(t)) return;
+    const updated = { ...settings, imageSearchTerms: [...settings.imageSearchTerms, t] };
+    setSettings(updated);
+    saveSettings(updated);
+    setImageInput("");
+  }
+
+  function removeImageTerm(t: string) {
+    const updated = { ...settings, imageSearchTerms: settings.imageSearchTerms.filter((x) => x !== t) };
+    setSettings(updated);
+    saveSettings(updated);
+  }
+
   async function handleEnableNotifications() {
     const perm = await requestNotificationPermission();
     setNotifPermission(perm);
@@ -98,6 +114,7 @@ export default function Settings() {
   const tabs: { id: Tab; label: string }[] = [
     { id: "triggers", label: "Trigger Words" },
     { id: "hobbies", label: "Hobbies" },
+    { id: "images", label: "Images" },
     { id: "general", label: "General" },
     { id: "misc", label: "Misc" },
   ];
@@ -112,12 +129,12 @@ export default function Settings() {
         <h1 className="text-2xl font-bold mb-5">Settings</h1>
 
         {/* tabs */}
-        <div className="flex border-b border-[#2a2a2a]">
+        <div className="flex border-b border-[#2a2a2a] overflow-x-auto">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px ${
+              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition -mb-px whitespace-nowrap ${
                 tab === t.id
                   ? "border-violet-500 text-white"
                   : "border-transparent text-gray-500 hover:text-gray-300"
@@ -277,31 +294,93 @@ export default function Settings() {
           </section>
         )}
 
+        {/* --- Images tab --- */}
+        {tab === "images" && (
+          <section>
+            <p className="text-gray-400 text-sm mb-4">Words or phrases searched in Google Images during an Images mode session.</p>
+
+            <div className="flex gap-2 mb-4">
+              <input
+                className="flex-1 bg-[#171a2d] border border-[#252a40] rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500"
+                placeholder="e.g. backrooms, liminal spaces..."
+                value={imageInput}
+                onChange={(e) => setImageInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addImageTerm()}
+              />
+              <button
+                onClick={addImageTerm}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-4">
+              {settings.imageSearchTerms.length === 0 && (
+                <p className="text-gray-500 text-sm">No image search terms added yet.</p>
+              )}
+              {settings.imageSearchTerms.map((t) => (
+                <span key={t} className="flex items-center gap-1.5 bg-[#1a1a2e] border border-indigo-800 text-indigo-300 px-3 py-1 rounded-full text-sm">
+                  {t}
+                  <button onClick={() => removeImageTerm(t)} className="text-indigo-500 hover:text-white leading-none">×</button>
+                </span>
+              ))}
+            </div>
+
+            <p className="text-xs text-gray-600">SafeSearch is enabled for all image sessions. Google Images opens in a new tab while the timer runs in-app.</p>
+          </section>
+        )}
+
         {/* --- Misc tab --- */}
         {tab === "misc" && (
           <section>
             <h2 className="text-base font-semibold mb-4">Display</h2>
-            <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
-              <div>
-                <div className="text-sm font-medium text-white">Motivational pug</div>
-                <div className="text-xs text-gray-500">Show the running pug during exercises</div>
-              </div>
-              <button
-                onClick={() => {
-                  const updated = { ...settings, showPugBuddy: !settings.showPugBuddy };
-                  setSettings(updated);
-                  saveSettings(updated);
-                }}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings.showPugBuddy ? "bg-violet-600" : "bg-gray-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    settings.showPugBuddy ? "translate-x-6" : "translate-x-1"
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
+                <div>
+                  <div className="text-sm font-medium text-white">Motivational pug</div>
+                  <div className="text-xs text-gray-500">Show the running pug during exercises</div>
+                </div>
+                <button
+                  onClick={() => {
+                    const updated = { ...settings, showPugBuddy: !settings.showPugBuddy };
+                    setSettings(updated);
+                    saveSettings(updated);
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    settings.showPugBuddy ? "bg-violet-600" : "bg-gray-700"
                   }`}
-                />
-              </button>
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      settings.showPugBuddy ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3">
+                <div>
+                  <div className="text-sm font-medium text-white">Calming music</div>
+                  <div className="text-xs text-gray-500">Play relaxing background music during sessions</div>
+                </div>
+                <button
+                  onClick={() => {
+                    const updated = { ...settings, calmingMusic: !settings.calmingMusic };
+                    setSettings(updated);
+                    saveSettings(updated);
+                  }}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    settings.calmingMusic ? "bg-violet-600" : "bg-gray-700"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      settings.calmingMusic ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </section>
         )}

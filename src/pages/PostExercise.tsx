@@ -7,6 +7,7 @@ interface LocationState {
   minutes: number;
   mode: ExerciseMode;
   platform: Platform;
+  imageTerm?: string;
   sessionDate: string;
 }
 
@@ -55,12 +56,13 @@ function StreakCelebration({ streak }: { streak: number }) {
 export default function PostExercise() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { minutes, mode, platform, sessionDate } = (location.state as LocationState) ?? {
+  const { minutes, mode, platform, imageTerm, sessionDate } = (location.state as LocationState) ?? {
     minutes: 5,
     mode: "standard",
     platform: "reddit",
     sessionDate: new Date().toISOString(),
   };
+  const sessionLabel = mode === "images" && imageTerm ? imageTerm : platform;
 
   const hadSessionBeforeThis = hasSessionToday();
   const streakBefore = getStreak();
@@ -94,7 +96,7 @@ export default function PostExercise() {
         <div className="w-full max-w-sm space-y-4 text-center">
           <div className="text-5xl mb-2">✓</div>
           <h1 className="text-2xl font-bold">Well done.</h1>
-          <p className="text-gray-400 text-sm">{minutes} min · {mode} · {platform}</p>
+          <p className="text-gray-400 text-sm">{minutes} min · {mode} · {sessionLabel}</p>
 
           {newStreak !== null && newStreak > 0 && (
             <StreakCelebration streak={newStreak} />
@@ -128,7 +130,7 @@ export default function PostExercise() {
         <div className="text-center">
           <div className="text-4xl mb-3">✓</div>
           <h1 className="text-2xl font-bold">You did it.</h1>
-          <p className="text-gray-400 text-sm mt-1">{minutes} min · {mode} · {platform}</p>
+          <p className="text-gray-400 text-sm mt-1">{minutes} min · {mode} · {sessionLabel}</p>
         </div>
 
         <div className="bg-[#171a2d] border border-[#252a40] rounded-2xl p-5 space-y-6">

@@ -18,6 +18,7 @@ export default function Home() {
   const fact = getDailyFact();
   const canStart = settings.triggerWords.length > 0;
   const canHybrid = canStart && settings.hobbySearchTerms.length > 0;
+  const canImages = settings.imageSearchTerms.length > 0;
   const streakAtRisk = streak > 0 && !doneToday;
 
   useEffect(() => {
@@ -108,14 +109,14 @@ export default function Home() {
 
       {!showStart ? (
         <div className="flex flex-col items-center gap-3 w-full max-w-xs">
-          {!canStart && (
+          {!canStart && !canImages && (
             <p className="text-amber-400 text-sm text-center">
-              Add at least one trigger word in Settings to begin.
+              Add trigger words or image terms in Settings to begin.
             </p>
           )}
           <button
-            onClick={() => canStart && setShowStart(true)}
-            disabled={!canStart}
+            onClick={() => (canStart || canImages) && setShowStart(true)}
+            disabled={!canStart && !canImages}
             className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg transition shadow-lg shadow-violet-900/30"
           >
             Start Session
@@ -148,14 +149,15 @@ export default function Home() {
           {/* mode */}
           <div>
             <label className="text-sm text-gray-400 block mb-2">Mode</label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setMode("standard")}
+                disabled={!canStart}
                 className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
                   mode === "standard"
                     ? "bg-violet-600 border-violet-500 text-white"
                     : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
-                }`}
+                } disabled:opacity-40 disabled:cursor-not-allowed`}
               >
                 Standard
               </button>
@@ -183,12 +185,27 @@ export default function Home() {
               >
                 Split
               </button>
+              <button
+                onClick={() => canImages && setMode("images")}
+                disabled={!canImages}
+                title={!canImages ? "Add image search terms in Settings → Images to enable" : ""}
+                className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition border ${
+                  mode === "images"
+                    ? "bg-indigo-600 border-indigo-500 text-white"
+                    : "bg-[#1e2238] border-[#252a40] text-gray-400 hover:border-gray-500"
+                } disabled:opacity-40 disabled:cursor-not-allowed`}
+              >
+                Images
+              </button>
             </div>
             {mode === "hybrid" && (
               <p className="text-xs text-gray-500 mt-1.5">First half: trigger exposure · Second half: hobby search</p>
             )}
             {mode === "split" && (
               <p className="text-xs text-gray-500 mt-1.5">Trigger mock and hobby side by side the whole session</p>
+            )}
+            {mode === "images" && (
+              <p className="text-xs text-gray-500 mt-1.5">Google Images opens in a new tab · SafeSearch on · timer runs here</p>
             )}
           </div>
 

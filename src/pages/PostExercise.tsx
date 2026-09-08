@@ -41,6 +41,65 @@ function AnxietyPicker({ value, onChange }: { value: number | null; onChange: (v
   );
 }
 
+function AnxietyDropCard({ peak, current }: { peak: number; current: number }) {
+  const dropped = peak - current;
+  const peakPct = Math.round((peak / 7) * 100);
+  const currentPct = Math.round((current / 7) * 100);
+
+  const barColor = (n: number) => {
+    if (n <= 2) return "bg-green-400";
+    if (n <= 4) return "bg-yellow-400";
+    if (n <= 5) return "bg-orange-400";
+    return "bg-red-400";
+  };
+
+  return (
+    <div className="bg-white border border-violet-200 rounded-xl px-4 py-4 shadow-sm text-left space-y-3">
+      {/* peak row */}
+      <div className="space-y-1">
+        <div className="flex justify-between text-xs text-[#8b80a5]">
+          <span>Peak anxiety</span>
+          <span className="text-[#1e1230] font-medium">{peak}/7 — {LABELS[peak]}</span>
+        </div>
+        <div className="h-2 rounded-full bg-violet-100 overflow-hidden">
+          <div
+            className={`h-2 rounded-full transition-all duration-700 ${barColor(peak)}`}
+            style={{ width: `${peakPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* current row */}
+      <div className="space-y-1">
+        <div className="flex justify-between text-xs text-[#8b80a5]">
+          <span>Now</span>
+          <span className="text-[#1e1230] font-medium">{current}/7 — {LABELS[current]}</span>
+        </div>
+        <div className="h-2 rounded-full bg-violet-100 overflow-hidden">
+          <div
+            className={`h-2 rounded-full transition-all duration-700 delay-300 ${barColor(current)}`}
+            style={{ width: `${currentPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* drop callout */}
+      {dropped > 0 && (
+        <div className="flex items-center gap-2 pt-1 border-t border-violet-100">
+          <span className="text-green-500 text-sm font-bold">↓ {dropped} point{dropped !== 1 ? "s" : ""}</span>
+          <span className="text-[#8b80a5] text-xs">— that’s habituation. Your brain just learned.</span>
+        </div>
+      )}
+      {dropped === 0 && (
+        <p className="text-xs text-[#a89cc0] pt-1 border-t border-violet-100">Anxiety held steady — staying through it still builds tolerance.</p>
+      )}
+      {dropped < 0 && (
+        <p className="text-xs text-[#a89cc0] pt-1 border-t border-violet-100">Still elevated — that’s okay. The gains accumulate across sessions.</p>
+      )}
+    </div>
+  );
+}
+
 function StreakCelebration({ streak }: { streak: number }) {
   return (
     <div className="bg-orange-50 border border-orange-300 rounded-xl px-4 py-3 flex items-center gap-3 mb-4">
@@ -102,16 +161,7 @@ export default function PostExercise() {
             <StreakCelebration streak={newStreak} />
           )}
 
-          <div className="bg-white border border-violet-200 rounded-xl px-4 py-3 text-sm text-[#6b5f85] text-left space-y-1 shadow-sm">
-            <div className="flex justify-between">
-              <span>Peak anxiety</span>
-              <span className="text-[#1e1230] font-medium">{peak}/7 — {LABELS[peak!]}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Current anxiety</span>
-              <span className="text-[#1e1230] font-medium">{current}/7 — {LABELS[current!]}</span>
-            </div>
-          </div>
+          <AnxietyDropCard peak={peak!} current={current!} />
 
           <button
             onClick={() => navigate("/")}

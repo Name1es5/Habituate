@@ -126,14 +126,14 @@ export default function Exercise() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0f1a] text-white flex flex-col">
+    <div className="min-h-screen bg-[#1a1026] text-white flex flex-col">
       {/* exit nudge overlay */}
       {showExitNudge && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-6">
-          <div className="bg-[#171a2d] border border-[#252a40] rounded-2xl p-6 max-w-xs w-full text-center space-y-4">
+          <div className="bg-[#261b38] border border-[#3d2f55] rounded-2xl p-6 max-w-xs w-full text-center space-y-4">
             <div className="text-3xl">🌿</div>
             <h2 className="text-lg font-semibold">Stay a little longer?</h2>
-            <p className="text-gray-400 text-sm">
+            <p className="text-[#b0a0cc] text-sm">
               You've gone {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")} so far. The discomfort usually peaks and fades — you're closer than it feels.
             </p>
             <div className="flex gap-2">
@@ -145,7 +145,7 @@ export default function Exercise() {
               </button>
               <button
                 onClick={confirmExit}
-                className="flex-1 bg-[#1e2238] hover:bg-[#252a40] text-gray-400 hover:text-white font-medium py-2.5 rounded-xl transition text-sm"
+                className="flex-1 bg-[#2d2248] hover:bg-[#3d2f55] text-[#b0a0cc] hover:text-white font-medium py-2.5 rounded-xl transition text-sm"
               >
                 Exit anyway
               </button>
@@ -155,7 +155,7 @@ export default function Exercise() {
       )}
 
       {/* top bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e2238]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#2d2248]">
         <div className="flex items-center gap-3">
           <span className="text-2xl font-mono font-bold text-violet-400">{formatTime(secondsLeft)}</span>
           {mode === "hybrid" && (
@@ -166,22 +166,19 @@ export default function Exercise() {
           {mode === "split" && (
             <span className="text-xs px-2 py-0.5 rounded-full bg-violet-900 text-violet-300">split</span>
           )}
-          {mode === "images" && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-900 text-indigo-300">images</span>
-          )}
         </div>
         <button
           onClick={handleExit}
-          className="text-gray-500 hover:text-white text-sm border border-[#252a40] hover:border-gray-500 px-3 py-1.5 rounded-lg transition"
+          className="text-[#9b88bb] hover:text-white text-sm border border-[#3d2f55] hover:border-[#6b5f85] px-3 py-1.5 rounded-lg transition"
         >
           Exit
         </button>
       </div>
 
       {/* progress bar */}
-      <div className="h-1.5 bg-[#1e2238]">
+      <div className="h-1.5 bg-[#2d2248]">
         <div
-          className={`h-1.5 transition-all duration-1000 ${inHobbyHalf ? "bg-teal-500" : mode === "images" ? "bg-indigo-500" : "bg-violet-500"}`}
+          className={`h-1.5 transition-all duration-1000 ${inHobbyHalf ? "bg-teal-500" : "bg-violet-500"}`}
           style={{ width: `${progressPct}%` }}
         />
       </div>
@@ -190,11 +187,11 @@ export default function Exercise() {
       {mode !== "images" && mode === "split" ? (
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           {/* trigger half */}
-          <div className="flex-1 overflow-auto border-b lg:border-b-0 lg:border-r border-[#1e2238]">
+          <div className="flex-1 overflow-auto border-b lg:border-b-0 lg:border-r border-[#2d2248]">
             {!showTrigger && (
               <div className="flex flex-col items-center justify-center h-full gap-4 text-center p-8">
                 <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+                <p className="text-[#9b88bb] text-sm">Take a breath. Your session is loading.</p>
               </div>
             )}
             {post && showTrigger && (
@@ -208,7 +205,7 @@ export default function Exercise() {
 
           {/* hobby half */}
           <div className="flex-1 flex flex-col overflow-hidden">
-            <p className="text-xs text-gray-500 text-center py-1.5 border-b border-[#1e2238] flex-shrink-0">
+            <p className="text-xs text-[#9b88bb] text-center py-1.5 border-b border-[#2d2248] flex-shrink-0">
               <span className="text-teal-400">{searchTerm}</span>
             </p>
             <iframe
@@ -224,11 +221,11 @@ export default function Exercise() {
         <div className="flex-1 p-4 overflow-auto">
           {inHobbyHalf && mode === "hybrid" ? (
             <div className="w-full h-full flex flex-col gap-2">
-              <p className="text-xs text-gray-500 text-center">Searching: <span className="text-teal-400">{searchTerm}</span></p>
+              <p className="text-xs text-[#9b88bb] text-center">Searching: <span className="text-teal-400">{searchTerm}</span></p>
               <iframe
                 key={searchTerm}
                 src={`https://www.google.com/search?q=${encodeURIComponent(searchTerm)}&igu=1`}
-                className="w-full flex-1 rounded-xl border border-[#252a40]"
+                className="w-full flex-1 rounded-xl border border-[#3d2f55]"
                 style={{ minHeight: "calc(100vh - 140px)" }}
                 title="hobby search"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -239,7 +236,7 @@ export default function Exercise() {
               {!showTrigger && (
                 <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
                   <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
-                  <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+                  <p className="text-[#9b88bb] text-sm">Take a breath. Your session is loading.</p>
                 </div>
               )}
               {post && showTrigger && (
@@ -252,24 +249,24 @@ export default function Exercise() {
             </div>
           )}
         </div>
-      ) : null}
+      )}
 
       {/* images mode content */}
       {mode === "images" && (
         <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
           {!showTrigger ? (
             <div className="flex flex-col items-center gap-4">
-              <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
-              <p className="text-gray-500 text-sm">Take a breath. Your session is loading.</p>
+              <div className="w-8 h-8 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+              <p className="text-[#9b88bb] text-sm">Take a breath. Your session is loading.</p>
             </div>
           ) : (
             <div className="max-w-sm space-y-6">
               <div className="text-5xl mb-2">🖼️</div>
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Now viewing</p>
+                <p className="text-xs text-[#9b88bb] uppercase tracking-widest mb-2">Now viewing</p>
                 <h2 className="text-2xl font-bold text-white">{imageTerm}</h2>
               </div>
-              <div className="bg-[#171a2d] border border-[#252a40] rounded-xl px-4 py-3 text-sm text-gray-400 text-left space-y-1.5">
+              <div className="bg-[#261b38] border border-[#3d2f55] rounded-xl px-4 py-3 text-sm text-[#b0a0cc] text-left space-y-1.5">
                 <p>Google Images has opened in another tab with SafeSearch on.</p>
                 <p>Stay with the discomfort. Don't close the tab or look away yet.</p>
               </div>
